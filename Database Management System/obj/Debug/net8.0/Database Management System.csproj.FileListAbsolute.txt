@@ -1,0 +1,14 @@
+D:\C# Programs\DBMS\Database Management System\obj\Debug\net8.0\Database Management System.GeneratedMSBuildEditorConfig.editorconfig
+D:\C# Programs\DBMS\Database Management System\obj\Debug\net8.0\Database Management System.AssemblyInfoInputs.cache
+D:\C# Programs\DBMS\Database Management System\obj\Debug\net8.0\Database Management System.AssemblyInfo.cs
+D:\C# Programs\DBMS\Database Management System\obj\Debug\net8.0\Database Management System.csproj.CoreCompileInputs.cache
+D:\C# Programs\DBMS\Database Management System\bin\Debug\net8.0\Database Management System.exe
+D:\C# Programs\DBMS\Database Management System\bin\Debug\net8.0\Database Management System.deps.json
+D:\C# Programs\DBMS\Database Management System\bin\Debug\net8.0\Database Management System.runtimeconfig.json
+D:\C# Programs\DBMS\Database Management System\bin\Debug\net8.0\Database Management System.dll
+D:\C# Programs\DBMS\Database Management System\bin\Debug\net8.0\Database Management System.pdb
+D:\C# Programs\DBMS\Database Management System\obj\Debug\net8.0\Database Management System.dll
+D:\C# Programs\DBMS\Database Management System\obj\Debug\net8.0\refint\Database Management System.dll
+D:\C# Programs\DBMS\Database Management System\obj\Debug\net8.0\Database Management System.pdb
+D:\C# Programs\DBMS\Database Management System\obj\Debug\net8.0\Database Management System.genruntimeconfig.cache
+D:\C# Programs\DBMS\Database Management System\obj\Debug\net8.0\ref\Database Management System.dll
