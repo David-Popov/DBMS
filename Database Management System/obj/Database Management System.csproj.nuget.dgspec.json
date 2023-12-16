@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\C# Programs\\DBMS\\Database Management System\\Database Management System.csproj": {}
+    "D:\\GitHub\\DBMS\\Database Management System\\Database Management System.csproj": {}
   },
   "projects": {
-    "D:\\C# Programs\\DBMS\\Database Management System\\Database Management System.csproj": {
+    "D:\\GitHub\\DBMS\\Database Management System\\Database Management System.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\C# Programs\\DBMS\\Database Management System\\Database Management System.csproj",
+        "projectUniqueName": "D:\\GitHub\\DBMS\\Database Management System\\Database Management System.csproj",
         "projectName": "Database Management System",
-        "projectPath": "D:\\C# Programs\\DBMS\\Database Management System\\Database Management System.csproj",
+        "projectPath": "D:\\GitHub\\DBMS\\Database Management System\\Database Management System.csproj",
         "packagesPath": "C:\\Users\\vvv05\\.nuget\\packages\\",
-        "outputPath": "D:\\C# Programs\\DBMS\\Database Management System\\obj\\",
+        "outputPath": "D:\\GitHub\\DBMS\\Database Management System\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\vvv05\\AppData\\Roaming\\NuGet\\NuGet.Config",

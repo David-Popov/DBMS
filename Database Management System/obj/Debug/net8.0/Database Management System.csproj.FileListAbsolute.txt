@@ -12,3 +12,18 @@ D:\C# Programs\DBMS\Database Management System\obj\Debug\net8.0\refint\Database 
 D:\C# Programs\DBMS\Database Management System\obj\Debug\net8.0\Database Management System.pdb
 D:\C# Programs\DBMS\Database Management System\obj\Debug\net8.0\Database Management System.genruntimeconfig.cache
 D:\C# Programs\DBMS\Database Management System\obj\Debug\net8.0\ref\Database Management System.dll
+D:\GitHub\DBMS\Database Management System\bin\Debug\net8.0\Database Management System.exe
+D:\GitHub\DBMS\Database Management System\bin\Debug\net8.0\Database Management System.deps.json
+D:\GitHub\DBMS\Database Management System\bin\Debug\net8.0\Database Management System.runtimeconfig.json
+D:\GitHub\DBMS\Database Management System\bin\Debug\net8.0\Database Management System.dll
+D:\GitHub\DBMS\Database Management System\bin\Debug\net8.0\Database Management System.pdb
+D:\GitHub\DBMS\Database Management System\obj\Debug\net8.0\Database Management System.GeneratedMSBuildEditorConfig.editorconfig
+D:\GitHub\DBMS\Database Management System\obj\Debug\net8.0\Database Management System.AssemblyInfoInputs.cache
+D:\GitHub\DBMS\Database Management System\obj\Debug\net8.0\Database Management System.AssemblyInfo.cs
+D:\GitHub\DBMS\Database Management System\obj\Debug\net8.0\Database Management System.csproj.CoreCompileInputs.cache
+D:\GitHub\DBMS\Database Management System\obj\Debug\net8.0\Database Management System.sourcelink.json
+D:\GitHub\DBMS\Database Management System\obj\Debug\net8.0\Database Management System.dll
+D:\GitHub\DBMS\Database Management System\obj\Debug\net8.0\refint\Database Management System.dll
+D:\GitHub\DBMS\Database Management System\obj\Debug\net8.0\Database Management System.pdb
+D:\GitHub\DBMS\Database Management System\obj\Debug\net8.0\Database Management System.genruntimeconfig.cache
+D:\GitHub\DBMS\Database Management System\obj\Debug\net8.0\ref\Database Management System.dll
