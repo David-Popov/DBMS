@@ -14,7 +14,7 @@ namespace Database_Management_System.DataStructures
         public T Top 
         { get { return _data[_length - 1]; } }
 
-        private void resize()
+        private void Resize()
         {
             T[] newData = new T[_data.Length * 2];
             for (int i = 0; i < _length; ++i)
@@ -31,7 +31,7 @@ namespace Database_Management_System.DataStructures
         public void Push(T value)
         {
             if (_length >= _data.Length)
-                resize();
+                Resize();
             _data[_length++] = value;
         }
 

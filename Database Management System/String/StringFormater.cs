@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Database_Management_System.DataStructures;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +16,11 @@ namespace Database_Management_System.String
             int count = 0;
             for (int i = 0; i < src.Length; ++i)
             {
+                if (src[i] == '\"')
+                {
+                    while (src[++i] != '\"')
+                        ++i;
+                }
                 if (src[i] == toFind)
                     ++count;
             }
@@ -29,7 +36,7 @@ namespace Database_Management_System.String
             while (src[index] == ' ')
                 ++index;
 
-            for (int i = 0; i < src.Length - 1; ++i)
+            for (int i = index; i < src.Length - 1; ++i)
             {
                 if (src[i] == '\"')
                 {
@@ -37,13 +44,22 @@ namespace Database_Management_System.String
                     while (src[i] != '\"')
                         sb.ConCat(src[i++]);
                 }
+
                 while (src[i] == ' ' && src[i + 1] == ' ')
                     ++i;
                 if(src[i] == ' ' && (src[i + 1] == ',' || src[i + 1] == ':' || src[i + 1] == '(' || src[i + 1] == ')'))
                 {
                     ++i;
-                    sb.ConCat(src[i++]);
-                    while (src[i] == ' ')
+                    char c = src[i++];
+                    sb.ConCat(c);
+                    while (src[i] == ' ' || src[i] == c)
+                        ++i;
+                }
+                if(src[i] == ',' || src[i] == ':' || src[i] == '(' || src[i] == ')')
+                {
+                    char c = src[i++];
+                    sb.ConCat(c);
+                    while (src[i] == ' ' || src[i] == c)
                         ++i;
                 }
 
@@ -60,7 +76,32 @@ namespace Database_Management_System.String
         {
             StringBuilder sb = new StringBuilder();
             while (ind < src.Length && src[ind] != c)
+            {
+                if(src[ind] == '\"')
+                {
+                    sb.ConCat(src[ind++]);
+                    while (src[ind] != '\"')
+                        sb.ConCat(src[ind++]);
+                }
                 sb.ConCat(src[ind++]);
+            }
+
+            return sb.C_str;
+        }
+
+        public static string Substring(string src, int ind, char c)
+        {
+            StringBuilder sb = new StringBuilder();
+            while (ind < src.Length && src[ind] != c)
+            {
+                if (src[ind] == '\"')
+                {
+                    sb.ConCat(src[ind++]);
+                    while (src[ind] != '\"')
+                        sb.ConCat(src[ind++]);
+                }
+                sb.ConCat(src[ind++]);
+            }
 
             return sb.C_str;
         }
@@ -68,6 +109,7 @@ namespace Database_Management_System.String
         public static string Substring(string src, int ind, int count)
         {
             StringBuilder sb = new StringBuilder();
+
             for (int i = ind; i < count + ind; ++i)
                 sb.ConCat(src[i]);
 
@@ -104,11 +146,27 @@ namespace Database_Management_System.String
             string first = Substring(src, 0, replacePos);
             if (replacePos + replace.Length + 1 < src.Length)
             {
-                string second = Substring(src, replacePos + replace.Length, src.Length - (replacePos + replace.Length));
+                string second = Substring(src, replacePos + replace.Length, src.Length - replace.Length - replacePos);
                 return first + what + second;
             }
 
             return first + what;
+        }
+
+        public static string PadLeft(string src, int padding)
+        {
+            StringBuilder sb = new StringBuilder(src);
+            sb += new StringBuilder(' ', padding);
+
+            return sb.C_str;
+        }
+
+        public static string PadRight(string src, int padding)
+        {
+            StringBuilder sb = new StringBuilder(' ', padding);
+            sb += new StringBuilder(src);
+
+            return sb.C_str;
         }
     }
 }

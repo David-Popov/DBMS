@@ -23,7 +23,7 @@ namespace Database_Management_System.String
             _length = other._length;
         }
 
-        private void resize(int size)
+        private void Resize(int size)
         {
             char[] newData = new char[(_data.Length + size) * 2];
             for (int i = 0; i < _length; ++i)
@@ -47,10 +47,19 @@ namespace Database_Management_System.String
             _data[_length] = '\0';
         }
 
+        public StringBuilder(char symbol, int count)
+        {
+            _data = new char[count * 2];
+            for (int i = 0; i < count; ++i)
+                _data[i] = symbol;
+            _length = count;
+            _data[_length] = '\0';
+        }
+
         public void ConCat(string s)
         {
             if (_data.Length <= _length + s.Length)
-                resize(s.Length);
+                Resize(s.Length);
 
             for (int i = 0; i < s.Length; ++i)
                 _data[_length + i] = s[i];
@@ -61,7 +70,7 @@ namespace Database_Management_System.String
         public void ConCat(char c)
         {
             if (_data.Length <= _length + 1)
-                resize(1);
+                Resize(1);
 
             _data[_length++] = c;
             _data[_length] = '\0';
