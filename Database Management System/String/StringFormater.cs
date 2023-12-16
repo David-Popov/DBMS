@@ -72,7 +72,7 @@ namespace Database_Management_System.String
             return sb.C_str;
         }
 
-        public static string Substring(string src, ref int ind, char c)
+        private static string Substring(string src, ref int ind, char c)
         {
             StringBuilder sb = new StringBuilder();
             while (ind < src.Length && src[ind] != c)
@@ -106,11 +106,14 @@ namespace Database_Management_System.String
             return sb.C_str;
         }
 
-        public static string Substring(string src, int ind, int count)
+        public static string Substring(string src, int start, int? end = null)
         {
             StringBuilder sb = new StringBuilder();
 
-            for (int i = ind; i < count + ind; ++i)
+            if (end == null)
+                end = src.Length - 1;
+
+            for (int i = start; i <= end; ++i)
                 sb.ConCat(src[i]);
 
             return sb.C_str;
@@ -120,7 +123,7 @@ namespace Database_Management_System.String
         {
             for (int i = 0; i < src.Length - toFind.Length + 1; ++i)
             {
-                if(Substring(src, i, toFind.Length) == toFind)
+                if(Substring(src, i, i + toFind.Length - 1) == toFind)
                     return i;
             }
 
@@ -143,14 +146,25 @@ namespace Database_Management_System.String
         public static string Replace(string src, string replace, string what)
         {
             int replacePos = IndexOf(src, replace);
-            string first = Substring(src, 0, replacePos);
+            string first = Substring(src, 0, replacePos - 1);
             if (replacePos + replace.Length + 1 < src.Length)
             {
-                string second = Substring(src, replacePos + replace.Length, src.Length - replace.Length - replacePos);
+                string second = Substring(src, replacePos + replace.Length);
                 return first + what + second;
             }
 
             return first + what;
+        }
+
+        public static string Trim(string src, char toTrim)
+        {
+            int beg = 0, end = src.Length - 1;
+            while (src[beg] == toTrim)
+                ++beg;
+            while (src[end] == toTrim)
+                --end;
+
+            return Substring(src, beg, end);
         }
 
         public static string PadLeft(string src, int padding)
@@ -167,6 +181,13 @@ namespace Database_Management_System.String
             sb += new StringBuilder(src);
 
             return sb.C_str;
+        }
+
+        public static string FixedPrint(string src, int padding)
+        {
+            if (src.Length % 2 == 1)
+                return PadRight(PadLeft(src, padding), padding + 1);
+            return PadRight(PadLeft(src, padding), padding);
         }
     }
 }

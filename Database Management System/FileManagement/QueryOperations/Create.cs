@@ -1,4 +1,5 @@
 ﻿using Database_Management_System.String;
+using Database_Management_System.Validators.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,8 +18,8 @@ namespace Database_Management_System.FileManagement.QueryOperations
         {
             _tableName = StringFormatter.Substring(src, 0, '(');
             var columns = StringFormatter.Split(
-                          StringFormatter.Substring(src, StringFormatter.IndexOf(src, "(") + 1, 
-                          src.Length - (StringFormatter.IndexOf(src, "(") + 1)), ','); //TODO
+                          StringFormatter.Substring(
+                          src, StringFormatter.IndexOf(src, "(") + 1, src.Length - 2), ',');
 
             columnsInfos = new ColumnInfo[columns.Length];
             for(int i = 0; i < columns.Length; ++i)
@@ -36,6 +37,9 @@ namespace Database_Management_System.FileManagement.QueryOperations
                     var getNameAndType = StringFormatter.Split(defautSplitted[0], ':');
                     name = getNameAndType[0]; 
                     type = getNameAndType[1];
+
+                    if (type == Utility.typeString || type == Utility.typeDateTime)
+                        defaultValue = StringFormatter.Trim(defaultValue, '\"');
                 }
                 else {
                     var getNameAndType = StringFormatter.Split(columns[i], ':');
