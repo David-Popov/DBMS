@@ -12,9 +12,10 @@ namespace Database_Management_System.FileManagement
     {
         public static void CreateFile(string fileName, ColumnInfo[] infos)
         {
-            using (FileStream stream = new FileStream($"{Utility.metaExtention}{fileName}.bin", FileMode.Create, FileAccess.Write))
+            using (FileStream metaStream = new FileStream($"{Utility.metaFolderPath}{Utility.metaExtention}{fileName}.bin", 
+                   FileMode.Create, FileAccess.Write))
             {
-                BinaryWriter writer = new BinaryWriter(stream);
+                BinaryWriter writer = new BinaryWriter(metaStream);
                 writer.Write(0);
                 int rowSize = 0;
                 foreach (var info in infos)
@@ -24,11 +25,17 @@ namespace Database_Management_System.FileManagement
                 foreach (ColumnInfo info in infos)
                     info.WriteColumn(writer);
             }
+
+            FileStream fileStream = new FileStream($"{Utility.filesFolderPath}{fileName}.bin", 
+                                                   FileMode.Create, FileAccess.Write);
+            fileStream.Close();
         }
 
         public static ColumnInfo[] ReadFile(string fileName, out int rowSize, out int rowCount) 
         {
-            FileStream stream = new FileStream($"{Utility.metaExtention}{fileName}.bin", FileMode.Open, FileAccess.Read);
+            FileStream stream = new FileStream($"{Utility.metaFolderPath}{Utility.metaExtention}{fileName}.bin", 
+                                               FileMode.Open, FileAccess.Read);
+
             BinaryReader reader = new BinaryReader(stream);
             rowCount = reader.ReadInt32();
             rowSize = reader.ReadInt32();

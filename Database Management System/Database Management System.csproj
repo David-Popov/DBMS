@@ -8,4 +8,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Files\MetaFiles\" />
+    <Folder Include="Files\TableFiles\" />
+  </ItemGroup>
+
 </Project>

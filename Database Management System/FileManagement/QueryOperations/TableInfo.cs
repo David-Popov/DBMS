@@ -32,6 +32,7 @@ namespace Database_Management_System.FileManagement.QueryOperations
             double typePadding = Math.Ceiling(((double)(padding - Utility.type.Length)) / 2 + 1);
             double deafultPadding = Math.Ceiling(((double)(padding - Utility.defaultValue.Length)) / 2 + 1);
 
+            Console.WriteLine($"{Utility.tableName}: {_tableName}\n");
             Console.Write($"|{StringFormatter.FixedPrint(Utility.columnName, (int)columnPadding)}|");
             Console.Write($"{StringFormatter.FixedPrint(Utility.type, (int)typePadding)}|");
             Console.Write($"{StringFormatter.FixedPrint(Utility.defaultValue, (int)deafultPadding)}|");

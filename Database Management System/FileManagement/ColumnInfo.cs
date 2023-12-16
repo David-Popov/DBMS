@@ -78,7 +78,6 @@ namespace Database_Management_System.FileManagement
 
         public string ToString(int padding)
         {
-            //TODO
             double namePadding = Math.Ceiling(((double)(padding - name.Length)) / 2 + 1);
             double typePadding = Math.Ceiling(((double)(padding - type.Length)) / 2 + 1);
             double defaultPadding = Math.Ceiling(((double)(padding - _defaultValue.Length)) / 2 + 1);
