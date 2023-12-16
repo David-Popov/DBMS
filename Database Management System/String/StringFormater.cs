@@ -61,6 +61,7 @@ namespace Database_Management_System.String
                     sb.ConCat(c);
                     while (src[i] == ' ' || src[i] == c)
                         ++i;
+                        
                 }
 
                 sb.ConCat(src[i]);
@@ -119,9 +120,9 @@ namespace Database_Management_System.String
             return sb.C_str;
         }
 
-        public static int IndexOf(string src, string toFind)
+        public static int IndexOf(string src, string toFind, int startPos = 0)
         {
-            for (int i = 0; i < src.Length - toFind.Length + 1; ++i)
+            for (int i = startPos; i < src.Length - toFind.Length + 1; ++i)
             {
                 if(Substring(src, i, i + toFind.Length - 1) == toFind)
                     return i;

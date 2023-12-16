@@ -12,12 +12,13 @@ namespace Database_Management_System.Validators.Constants
         public const string info = "TableInfo";
         public const string drop = "DropTable";
         public const string list = "ListTables";
-        public const string insert = "Insert INTO";
+        public const string insert = "Insert";
         public const string delete = "Delete";
         public const string from = "FROM";
         public const string where = "WHERE";
         public const string distinct = "DISTINCT";
         public const string orderby = "ORDER BY";
+        public const string values = "VALUES";
 
         public static bool isQuery(string src)
         {
