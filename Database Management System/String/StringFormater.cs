@@ -157,6 +157,47 @@ namespace Database_Management_System.String
             return first + what;
         }
 
+        public static string ReplaceAll(string src, string replace, string what)
+        {
+            while(IndexOf(src, replace) != -1)
+                src = Replace(src, replace, what);
+
+            return src;
+        }
+
+        public static string Replace(string src, string replace, char what)
+        {
+            int replacePos = IndexOf(src, replace);
+            string first = Substring(src, 0, replacePos - 1);
+            if (replacePos + replace.Length + 1 < src.Length)
+            {
+                string second = Substring(src, replacePos + replace.Length);
+                return first + what + second;
+            }
+
+            return first + what;
+        }
+
+        public static string Replace(string src, int pos, char what)
+        {
+            string first = Substring(src, 0, pos - 1);
+            if (pos + 1 < src.Length)
+            {
+                string second = Substring(src, pos + 1);
+                return first + what + second;
+            }
+
+            return first + what;
+        }
+
+        public static string ReplaceAll(string src, string replace, char what)
+        {
+            while (IndexOf(src, replace) != -1)
+                src = Replace(src, replace, what);
+
+            return src;
+        }
+
         public static string Trim(string src, char toTrim)
         {
             int beg = 0, end = src.Length - 1;
@@ -166,6 +207,26 @@ namespace Database_Management_System.String
                 --end;
 
             return Substring(src, beg, end);
+        }
+
+        public static int Compare(string left, string right)
+        {
+            if (left.Length > right.Length)
+                return 1;
+            else if (left.Length < right.Length)
+                return -1;
+            else
+            {
+                for(int i = 0; i < left.Length; ++i)
+                {
+                    if (left[i] > right[i])
+                        return 1;
+                    if (left[i] < right[i])
+                        return -1;
+                }
+            }
+
+            return 0;
         }
 
         public static string PadLeft(string src, int padding)

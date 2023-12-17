@@ -15,6 +15,7 @@ namespace Database_Management_System.Validators.Constants
         public const string insert = "Insert";
         public const string delete = "Delete";
         public const string from = "FROM";
+        public const string into = "INTO";
         public const string where = "WHERE";
         public const string distinct = "DISTINCT";
         public const string orderby = "ORDER BY";

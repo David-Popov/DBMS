@@ -11,9 +11,6 @@ namespace Database_Management_System.DataStructures
         private T[] _data;
         private int _length;
 
-        public T Top 
-        { get { return _data[_length - 1]; } }
-
         private void Resize()
         {
             T[] newData = new T[_data.Length * 2];
@@ -28,6 +25,11 @@ namespace Database_Management_System.DataStructures
             _length = 0;
         }
 
+        public T Peek()
+        { 
+            return _data[_length - 1];
+        }
+
         public void Push(T value)
         {
             if (_length >= _data.Length)
@@ -37,7 +39,7 @@ namespace Database_Management_System.DataStructures
 
         public T Pop()
         {
-            T top = Top;
+            T top = Peek();
             --_length;
             return top;
         }
