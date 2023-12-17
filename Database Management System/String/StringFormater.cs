@@ -38,30 +38,30 @@ namespace Database_Management_System.String
 
             for (int i = index; i < src.Length - 1; ++i)
             {
+                while (src[i] == ' ' && src[i + 1] == ' ')
+                    ++i;
+                if (src[i] == ' ' && (src[i + 1] == ',' || src[i + 1] == ':' || src[i + 1] == '(' || src[i + 1] == ')'))
+                {
+                    ++i;
+                    char c = src[i++];
+                    sb.ConCat(c);
+                    while (src[i] == ' ' || src[i] == c)
+                        ++i;
+                }
+                if (src[i] == ',' || src[i] == ':' || src[i] == '(' || src[i] == ')')
+                {
+                    char c = src[i++];
+                    sb.ConCat(c);
+                    while (src[i] == ' ' || src[i] == c)
+                        ++i;
+
+                }
+
                 if (src[i] == '\"')
                 {
                     sb.ConCat(src[i++]);
                     while (src[i] != '\"')
                         sb.ConCat(src[i++]);
-                }
-
-                while (src[i] == ' ' && src[i + 1] == ' ')
-                    ++i;
-                if(src[i] == ' ' && (src[i + 1] == ',' || src[i + 1] == ':' || src[i + 1] == '(' || src[i + 1] == ')'))
-                {
-                    ++i;
-                    char c = src[i++];
-                    sb.ConCat(c);
-                    while (src[i] == ' ' || src[i] == c)
-                        ++i;
-                }
-                if(src[i] == ',' || src[i] == ':' || src[i] == '(' || src[i] == ')')
-                {
-                    char c = src[i++];
-                    sb.ConCat(c);
-                    while (src[i] == ' ' || src[i] == c)
-                        ++i;
-                        
                 }
 
                 sb.ConCat(src[i]);
@@ -78,7 +78,7 @@ namespace Database_Management_System.String
             StringBuilder sb = new StringBuilder();
             while (ind < src.Length && src[ind] != c)
             {
-                if(src[ind] == '\"')
+                if (src[ind] == '\"')
                 {
                     sb.ConCat(src[ind++]);
                     while (src[ind] != '\"')
@@ -124,14 +124,14 @@ namespace Database_Management_System.String
         {
             for (int i = startPos; i < src.Length - toFind.Length + 1; ++i)
             {
-                if(Substring(src, i, i + toFind.Length - 1) == toFind)
+                if (Substring(src, i, i + toFind.Length - 1) == toFind)
                     return i;
             }
 
             return -1;
         }
 
-        public static string[] Split(string src, char c = ' ') 
+        public static string[] Split(string src, char c = ' ')
         {
             string[] arr = new string[Count(src, c) + 1];
             int index = 0;
@@ -168,17 +168,17 @@ namespace Database_Management_System.String
             return Substring(src, beg, end);
         }
 
-        public static string PadLeft(string src, int padding)
+        public static string PadLeft(string src, int padding, char symbol = ' ')
         {
             StringBuilder sb = new StringBuilder(src);
-            sb += new StringBuilder(' ', padding);
+            sb += new StringBuilder(symbol, padding);
 
             return sb.C_str;
         }
 
-        public static string PadRight(string src, int padding)
+        public static string PadRight(string src, int padding, char symbol = ' ')
         {
-            StringBuilder sb = new StringBuilder(' ', padding);
+            StringBuilder sb = new StringBuilder(symbol, padding);
             sb += new StringBuilder(src);
 
             return sb.C_str;
