@@ -26,6 +26,6 @@ namespace Database_Management_System.Validators.Constants
 
         public const int sizeString = 255;
         public const int sizeInt = sizeof(int);
-        public const int sizeDateTime = sizeof(int) * 3;
+        public const int sizeDateTime = 255;
     }
 }

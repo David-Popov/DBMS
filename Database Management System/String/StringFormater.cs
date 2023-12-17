@@ -18,7 +18,7 @@ namespace Database_Management_System.String
             {
                 if (src[i] == '\"')
                 {
-                    while (src[++i] != '\"')
+                    while (src[i] != '\"')
                         ++i;
                 }
                 if (src[i] == toFind)
