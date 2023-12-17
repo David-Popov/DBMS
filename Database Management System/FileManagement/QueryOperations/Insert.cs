@@ -1,11 +1,6 @@
 ﻿using Database_Management_System.String;
 using Database_Management_System.Validators.Constants;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Database_Management_System.FileManagement.QueryOperations
 {
