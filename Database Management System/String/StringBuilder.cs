@@ -56,7 +56,7 @@ namespace Database_Management_System.String
             _data[_length] = '\0';
         }
 
-        public void ConCat(string s)
+        public StringBuilder ConCat(string s)
         {
             if (_data.Length <= _length + s.Length)
                 Resize(s.Length);
@@ -65,36 +65,43 @@ namespace Database_Management_System.String
                 _data[_length + i] = s[i];
             _length += s.Length;
             _data[Length] = '\0';
+
+            return this;
         }
 
-        public void ConCat(char c)
+        public StringBuilder ConCat(char c)
         {
             if (_data.Length <= _length + 1)
                 Resize(1);
 
             _data[_length++] = c;
             _data[_length] = '\0';
+
+            return this;
         }
 
         public static StringBuilder operator +(StringBuilder sb, string s)
         {
             StringBuilder sbCopy = new StringBuilder(sb);
-            sbCopy.ConCat(s);
-            return sbCopy;
+            return sbCopy.ConCat(s);
+        }
+
+        public static StringBuilder operator +(string s, StringBuilder sb)
+        {
+            StringBuilder ssb = new StringBuilder(s);
+            return ssb.ConCat(sb.C_str);
         }
 
         public static StringBuilder operator +(StringBuilder sb, char c)
         {
             StringBuilder sbCopy = new StringBuilder(sb);
-            sbCopy.ConCat(c);
-            return sbCopy;
+            return sbCopy.ConCat(c);
         }
 
         public static StringBuilder operator +(StringBuilder sb, StringBuilder other)
         {
             StringBuilder sbCopy = new StringBuilder(sb);
-            sbCopy.ConCat(other.C_str);
-            return sbCopy;
+            return sbCopy.ConCat(other.C_str);
         }
     }
 }
