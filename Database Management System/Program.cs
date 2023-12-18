@@ -9,11 +9,13 @@ using Database_Management_System.Validators.Constants;
 
 //createQuery.execute();
 
-var query = QueryParser.CreateQuery("Insert INTO Sample (Id, Name) VALUES (1, \"Gosho\")");
+//var query = QueryParser.CreateQuery("Insert INTO Sample (Id, Name) VALUES (1, \"Pedro\")");
 
-query.execute();
+//query.execute();
 
 var data = new DataArray("Sample", new FileStream(@$"{Utility.filesFolderPath}Sample.bin", FileMode.Open, FileAccess.ReadWrite));
 
 data.Print();
+
+data.DeleteRecord(2);
 

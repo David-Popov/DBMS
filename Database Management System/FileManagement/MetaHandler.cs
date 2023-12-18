@@ -51,7 +51,7 @@ namespace Database_Management_System.FileManagement
             return infos;
         }
 
-        public static void UpdateRowCount(string tableName)
+        public static void UpdateRowCountOnInsert(string tableName)
         {
             using (FileStream stream = new FileStream(@$"{Utility.metaFolderPath}{Utility.metaExtention}{tableName}.bin", FileMode.Open, FileAccess.ReadWrite))
             {
@@ -62,6 +62,21 @@ namespace Database_Management_System.FileManagement
 
                 br.BaseStream.Seek(0, SeekOrigin.Begin);
                 bw.Write(++recordsCount);
+                br.BaseStream.Seek(0, SeekOrigin.Begin);
+            }
+        }
+
+        public static void UpdateRowCountOnDelete(string tableName)
+        {
+            using (FileStream stream = new FileStream(@$"{Utility.metaFolderPath}{Utility.metaExtention}{tableName}.bin", FileMode.Open, FileAccess.ReadWrite))
+            {
+                BinaryReader br = new BinaryReader(stream);
+                BinaryWriter bw = new BinaryWriter(stream);
+
+                var recordsCount = br.ReadInt32();
+
+                br.BaseStream.Seek(0, SeekOrigin.Begin);
+                bw.Write(--recordsCount);
                 br.BaseStream.Seek(0, SeekOrigin.Begin);
             }
         }

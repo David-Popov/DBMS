@@ -103,7 +103,7 @@ namespace Database_Management_System.FileManagement.QueryOperations
 
                 }
 
-                MetaHandler.UpdateRowCount(_tableName);
+                MetaHandler.UpdateRowCountOnInsert(_tableName);
 
                 //bw.Flush();
             }

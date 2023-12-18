@@ -13,24 +13,26 @@ namespace Database_Management_System.DataStructures
     public class DataArray
     {
         private readonly BinaryReader _br;
-        private Stream _stream;
+        private readonly BinaryWriter _bw;
+        private readonly Stream _stream;
+        private readonly ColumnInfo[] Columns;
 
-        private string _FileName { get; set; }
-        private int _RowSize { get; set; }
-        public const int Offset = 0;
-        public int Count;
+        private string FileName;
+        private int RowSize;
+        public int Offset = 0;
         public int Length;
-        private ColumnInfo[] Columns;
 
         public DataArray(string fileName, Stream stream)
         {
-            _FileName = fileName;
-            Columns = MetaHandler.ReadFile(_FileName, out int rowSize, out int rowCount);
+            FileName = fileName;
+            Columns = MetaHandler.ReadFile(FileName, out int rowSize, out int rowCount);
+            RowSize = rowSize;
             Length = rowCount;
 
             _stream = stream;
-            _stream.SetLength(Length * (Utility.sizeInt + Utility.sizeString + Utility.sizeDateTime));
             _br = new BinaryReader(_stream);
+            _bw = new BinaryWriter(_stream);
+            _stream.SetLength(Length * (Utility.sizeInt + Utility.sizeString + Utility.sizeDateTime));
         }
 
         private RowValues BytesToString(ColumnInfo[] metadata)
@@ -74,10 +76,8 @@ namespace Database_Management_System.DataStructures
         {
             get
             {
-                var metadata = MetaHandler.ReadFile(_FileName, out int rowSize, out int rowCount);
-                _RowSize = rowSize;
-                _stream.Seek(Offset + index * _RowSize, SeekOrigin.Begin);
-                return BytesToString(metadata);
+                _stream.Seek(Offset + index * RowSize, SeekOrigin.Begin);
+                return BytesToString(Columns);
             }
         }
 
@@ -100,6 +100,7 @@ namespace Database_Management_System.DataStructures
                     padding = padding < data[j].Length ? data[j].Length : padding;
                 }
             }
+
             Refresh();
 
             for (int i = 0; i < Columns.Length; i++)
@@ -110,6 +111,7 @@ namespace Database_Management_System.DataStructures
                 else
                     Console.Write($"{StringFormatter.FixedPrint(Columns[i].name, (int)namePadding)}|");
             }
+
             Console.WriteLine();
             Console.WriteLine(new string('-', (padding + 4) * Columns.Length + 1));
 
@@ -126,6 +128,35 @@ namespace Database_Management_System.DataStructures
                 }
                 Console.WriteLine();
             }
+        }
+
+
+        public void DeleteRecord(int index)
+        {
+            long sizeBefore = index * RowSize;
+
+            long offsetToDelete = sizeBefore;
+
+            long sizeAfter = _stream.Length - offsetToDelete - RowSize;
+
+            if (sizeAfter > 0)
+            {
+                byte[] buffer = new byte[sizeAfter];
+
+                _stream.Seek(offsetToDelete + RowSize, SeekOrigin.Begin);
+
+                _stream.Read(buffer, 0, buffer.Length);
+
+                _stream.Seek(offsetToDelete, SeekOrigin.Begin);
+
+                _stream.Write(buffer, 0, buffer.Length);
+            }
+
+            _stream.SetLength(_stream.Length - RowSize);
+
+            --Length;
+
+            MetaHandler.UpdateRowCountOnDelete(FileName);
         }
 
         public void Refresh()
