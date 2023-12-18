@@ -12,7 +12,7 @@ namespace Database_Management_System.FileManagement
     {
         public static void CreateFile(string fileName, ColumnInfo[] infos)
         {
-            using (FileStream metaStream = new FileStream($"{Utility.metaFolderPath}{Utility.metaExtention}{fileName}.bin", 
+            using (FileStream metaStream = new FileStream($"{Utility.metaFolderPath}{Utility.metaExtention}{fileName}.bin",
                    FileMode.Create, FileAccess.Write))
             {
                 BinaryWriter writer = new BinaryWriter(metaStream);
@@ -26,14 +26,14 @@ namespace Database_Management_System.FileManagement
                     info.WriteColumn(writer);
             }
 
-            FileStream fileStream = new FileStream($"{Utility.filesFolderPath}{fileName}.bin", 
+            FileStream fileStream = new FileStream($"{Utility.filesFolderPath}{fileName}.bin",
                                                    FileMode.Create, FileAccess.Write);
             fileStream.Close();
         }
 
-        public static ColumnInfo[] ReadFile(string fileName, out int rowSize, out int rowCount) 
+        public static ColumnInfo[] ReadFile(string fileName, out int rowSize, out int rowCount)
         {
-            FileStream stream = new FileStream($"{Utility.metaFolderPath}{Utility.metaExtention}{fileName}.bin", 
+            FileStream stream = new FileStream($"{Utility.metaFolderPath}{Utility.metaExtention}{fileName}.bin",
                                                FileMode.Open, FileAccess.Read);
 
             BinaryReader reader = new BinaryReader(stream);
@@ -46,7 +46,24 @@ namespace Database_Management_System.FileManagement
                 infos[i].ReadColumn(reader);
             }
 
+            stream.Close();
+
             return infos;
+        }
+
+        public static void UpdateRowCount(string tableName)
+        {
+            using (FileStream stream = new FileStream(@$"{Utility.metaFolderPath}{Utility.metaExtention}{tableName}.bin", FileMode.Open, FileAccess.ReadWrite))
+            {
+                BinaryReader br = new BinaryReader(stream);
+                BinaryWriter bw = new BinaryWriter(stream);
+
+                var recordsCount = br.ReadInt32();
+
+                br.BaseStream.Seek(0, SeekOrigin.Begin);
+                bw.Write(++recordsCount);
+                br.BaseStream.Seek(0, SeekOrigin.Begin);
+            }
         }
     }
 }
