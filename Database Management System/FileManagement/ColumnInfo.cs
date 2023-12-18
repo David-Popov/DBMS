@@ -11,9 +11,9 @@ namespace Database_Management_System.FileManagement
 {
     public class ColumnInfo
     {
-        private string name;
-        private string type;
-        private string _defaultValue;
+        public string name;
+        public string type;
+        public string _defaultValue;
 
         private bool _hasDefault;
 
@@ -31,7 +31,7 @@ namespace Database_Management_System.FileManagement
 
         public int getDataSize()
         {
-            switch(type) 
+            switch(type)
             {
                 case Utility.typeString: return Utility.sizeString;
                 case Utility.typeInt: return Utility.sizeInt;
@@ -42,7 +42,7 @@ namespace Database_Management_System.FileManagement
             }
         }
 
-        public ColumnInfo() 
+        public ColumnInfo()
         {
             this.name = string.Empty;
             this.type = string.Empty;

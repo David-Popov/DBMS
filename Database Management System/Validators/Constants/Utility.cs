@@ -9,8 +9,8 @@ namespace Database_Management_System.Validators.Constants
     public static class Utility
     {
         public static string currentDirectory = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
-        public static string metaFolderPath = currentDirectory + "/Files/MetaFiles/";
-        public static string filesFolderPath = currentDirectory + "/Files/TableFiles/";
+        public static string metaFolderPath = currentDirectory + "\\Files\\MetaFiles\\";
+        public static string filesFolderPath = currentDirectory + "\\Files\\TableFiles\\";
 
         public const string metaExtention = "Meta_";
         public const string tablesFile = "Meta_TableNames";
@@ -26,6 +26,6 @@ namespace Database_Management_System.Validators.Constants
 
         public const int sizeString = 255;
         public const int sizeInt = sizeof(int);
-        public const int sizeDateTime = sizeof(int) * 3;
+        public const int sizeDateTime = 255;
     }
 }
