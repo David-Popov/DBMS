@@ -27,5 +27,15 @@ namespace Database_Management_System.Validators.Constants
         public const int sizeString = 255;
         public const int sizeInt = sizeof(int);
         public const int sizeDateTime = 255;
+
+        public static bool isDigit(char c)
+        {
+            return c >= '0' && c <= '9';
+        }
+
+        public static bool isSpecialCharacter(char c)
+        {
+            return LogicOperators.isOperator(c) || c == '(' || c == ')' || c == '\"';
+        }
     }
 }

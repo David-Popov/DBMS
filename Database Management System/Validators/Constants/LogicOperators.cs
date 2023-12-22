@@ -21,7 +21,7 @@ namespace Database_Management_System.Validators.Constants
         public const char cLtoEq = '{';
         public const char cEq = '=';
         public const char cAnd = '^';
-        public const char cOr = 'v';
+        public const char cOr = '&';
         public const char cNEq = '!';
 
         public static char GetReplacement(string op)

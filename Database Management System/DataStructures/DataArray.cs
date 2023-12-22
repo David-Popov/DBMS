@@ -22,14 +22,14 @@ namespace Database_Management_System.DataStructures
         public int Offset = 0;
         public int Length;
 
-        public DataArray(string fileName, Stream stream)
+        public DataArray(string fileName)
         {
             FileName = fileName;
             Columns = MetaHandler.ReadFile(FileName, out int rowSize, out int rowCount);
             RowSize = rowSize;
             Length = rowCount;
 
-            _stream = stream;
+            _stream = new FileStream($"{Utility.filesFolderPath}{fileName}.bin", FileMode.Open, FileAccess.ReadWrite);
             _br = new BinaryReader(_stream);
             _bw = new BinaryWriter(_stream);
             _stream.SetLength(Length * (Utility.sizeInt + Utility.sizeString + Utility.sizeDateTime));
@@ -37,10 +37,9 @@ namespace Database_Management_System.DataStructures
 
         private RowValues BytesToString(ColumnInfo[] metadata)
         {
-
             RowValues rowValues = new RowValues(metadata.Length);
 
-            for (int i = 0; i < metadata.Length; i++)
+            for (int i = 0; i < metadata.Length; ++i)
             {
                 switch (metadata[i].type)
                 {
@@ -159,6 +158,22 @@ namespace Database_Management_System.DataStructures
             MetaHandler.UpdateRowCountOnDelete(FileName);
         }
 
+        public int[] GetColumnIndexes(string[] columnNames)
+        {
+            MyList<int> indexes = new MyList<int>(columnNames.Length);
+
+            for (int i = 0; i < Columns.Length; ++i) 
+            {
+                foreach (var columnName in columnNames)
+                {
+                    if (Columns[i].name == columnName)
+                        indexes.Append(i);
+                }
+            }
+
+            return indexes.Data;
+        }
+
         public void Refresh()
         {
             _br.BaseStream.Seek(0, SeekOrigin.Begin);
@@ -172,6 +187,9 @@ namespace Database_Management_System.DataStructures
             {
                 Data = new string[columnCount];
             }
+
+            public string this[int index] 
+            { get { return Data[index]; } }
         }
     }
 }

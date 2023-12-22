@@ -18,8 +18,8 @@ namespace Database_Management_System.LogicExpressionCalculator.Expressions
         public BasicExpression(char op, string left, string right)
         {
             this.op = op;
-            this.left = left;
-            this.right = right;
+            this.left = StringFormatter.Trim(left, '\"');
+            this.right = StringFormatter.Trim(right, '\"');
         }
 
         public override bool evaluate()

@@ -149,6 +149,42 @@ namespace Database_Management_System.LogicExpressionCalculator
             return Formatter.Format(sb.C_str);
         }
 
+        public static string[] ExtractColumnNames(string src)
+        {
+            MyList<string> res = new MyList<string>();
+            for (int i = 0; i < src.Length; ++i)
+            {
+                StringBuilder s = new StringBuilder();
+                bool firstIter = true;
+
+                while (!Utility.isSpecialCharacter(src[i]))
+                {
+                    if (firstIter && Utility.isDigit(src[i]))
+                        break;
+
+                    s.ConCat(src[i++]);
+                    firstIter = false;
+                }
+
+                if (src[i] == '\"')
+                {
+                    ++i;
+                    while (src[i] != '\"')
+                    {
+                        ++i;
+                        if (i >= src.Length)
+                            break;
+                    }
+
+                }
+
+                if (s.Length != 0)
+                    res.Append(s.C_str);
+            }
+
+            return res.Data;
+        }
+
         public static Expression? ParseExpression(string src)
         {
             if (src.Length == 0)
