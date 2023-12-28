@@ -105,13 +105,17 @@ namespace Database_Management_System.DataStructures
         public bool HasKey(TKey key)
         {
             int index = GetBucketIndex(key);
+            int startIndex = index;
 
-            while (buckets[index].Key != null)
+            while (true)
             {
-                if (buckets[index].Key.Equals(key))
+                if (buckets[index] != null && buckets[index].Key.Equals(key))
                     return true;
 
                 index = (index + 1) % buckets.Length;
+
+                if (index == startIndex)
+                    break;
             }
 
             return false;

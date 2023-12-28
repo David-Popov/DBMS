@@ -25,12 +25,24 @@ arr[0] = new MyPair<int, int>(2, 1);
 arr[1] = new MyPair<int, int>(3, 1);
 arr[2] = new MyPair<int, int>(1, 1);
 arr[3] = new MyPair<int, int>(4, 1);
-var res = QuickSort.Sort<int,int>(arr, 0, arr.Length - 1, true);
+MyPair<int, int>[] res = QuickSort.Sort(arr, 0, arr.Length - 1, false);
 
 foreach (var item in res)
 {
     Console.WriteLine(item.First + " " + item.Second);
 }
+
+//int[] numbers = { 10, 7, 8, 9, 1, 5 };
+//Console.WriteLine("Original array:");
+
+//QuickSort.Sort(numbers, 0, numbers.Length - 1, true);
+
+//Console.WriteLine("\nSorted array in ascending order:");
+
+//foreach (var item in numbers)
+//{
+//    Console.WriteLine(item);
+//}
 
 /*var drop = QueryParser.CreateQuery("DropTable Sample");
 

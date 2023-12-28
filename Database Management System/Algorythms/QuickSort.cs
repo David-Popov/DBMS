@@ -9,109 +9,94 @@ namespace Database_Management_System.Algorythms
 {
     public static class QuickSort
     {
-        public static MyPair<T,N>[] Sort<T,N>(MyPair<T, N>[] pair, int start, int end, bool reverse) where T : IComparable<T> where N : IComparable<N>
+        public static T[] Sort<T>(T[] array, int start, int end, bool reverse) where T : IComparable<T>
         {
             if (reverse)
             {
-                SortDataDesc(pair, start, end);
+                SortDataDesc(array, start, end);
             }
             else
             {
-                SortDataAsc(pair, start, end);
+                SortDataAsc(array, start, end);
             }
 
-
-            return pair;
+            return array;
         }
 
-        private static void SortDataAsc<T,N>(MyPair<T, N>[] pair, int start, int end) where T : IComparable<T> where N : IComparable<N>
+        private static void SortDataAsc<T>(T[] array, int start, int end) where T : IComparable<T>
         {
             if (start < end)
             {
-                int pivot = PartitionAsc(pair, start, end);
-
-                if (pivot > 1)
-                    SortDataAsc(pair, start, pivot - 1);
-
-                if (pivot + 1 > end)
-                    SortDataAsc(pair, start + 1, pivot);
+                int pivot = PartitionAsc(array, start, end);
+                SortDataAsc(array, start, pivot - 1);
+                SortDataAsc(array, pivot + 1, end);
             }
         }
 
-        private static void SortDataDesc<T, N>(MyPair<T, N>[] pair, int start, int end) where T : IComparable<T> where N : IComparable<N>
+        private static void SortDataDesc<T>(T[] array, int start, int end) where T : IComparable<T>
         {
             if (start < end)
             {
-                int pivot = PartitionDesc(pair, start, end);
-
-                if (pivot > 1)
-                    SortDataDesc(pair, start, pivot - 1);
-
-                if (pivot + 1 > end)
-                    SortDataDesc(pair, start + 1, pivot);
+                int pivot = PartitionDesc(array, start, end);
+                SortDataDesc(array, start, pivot - 1);
+                SortDataDesc(array, pivot + 1, end);
             }
         }
 
-        private static int PartitionAsc<T,N>(MyPair<T, N>[] pair, int start, int end) where T : IComparable<T> where N : IComparable<N>
+        private static int PartitionAsc<T>(T[] array, int start, int end) where T : IComparable<T>
         {
-            MyPair<T, N> temp;
-            int pivotIdx = start++;
-            MyPair<T, N> pivotValue = pair[pivotIdx];
+            T pivotValue = array[start];
+            int left = start + 1;
+            int right = end;
 
             while (true)
             {
-                while (start <= end && pair[start] < pivotValue)
-                    start++;
+                while (left <= right && array[left].CompareTo(pivotValue) <= 0)
+                    left++;
 
-                while (start <= end && pair[end] > pivotValue)
-                    end--;
+                while (left <= right && array[right].CompareTo(pivotValue) > 0)
+                    right--;
 
-                if (start >= end)
+                if (left >= right)
                     break;
-                else
-                {
-                    temp = pair[start];
-                    pair[start] = pair[end];
-                    pair[end] = temp;
-                }
+
+                T temp = array[left];
+                array[left] = array[right];
+                array[right] = temp;
             }
 
-            temp = pair[end];
-            pair[end] = pair[pivotIdx];
-            pair[pivotIdx] = temp;
+            array[start] = array[right];
+            array[right] = pivotValue;
 
-            return end;
+            return right;
         }
 
-        private static int PartitionDesc<T, N>(MyPair<T, N>[] pair, int start, int end) where T : IComparable<T> where N : IComparable<N>
+        private static int PartitionDesc<T>(T[] array, int start, int end) where T : IComparable<T>
         {
-            MyPair<T, N> temp;
-            int pivotIdx = start++;
-            MyPair<T, N> pivotValue = pair[pivotIdx];
+            T pivotValue = array[start];
+            int left = start + 1;
+            int right = end;
 
             while (true)
             {
-                while (start <= end && pair[start] > pivotValue)
-                    start++;
+                while (left <= right && array[left].CompareTo(pivotValue) >= 0)
+                    left++;
 
-                while (start <= end && pair[end] < pivotValue)
-                    end--;
+                while (left <= right && array[right].CompareTo(pivotValue) < 0)
+                    right--;
 
-                if (start >= end)
+                if (left >= right)
                     break;
-                else
-                {
-                    temp = pair[start];
-                    pair[start] = pair[end];
-                    pair[end] = temp;
-                }
+
+                T temp = array[left];
+                array[left] = array[right];
+                array[right] = temp;
             }
 
-            temp = pair[end];
-            pair[end] = pair[pivotIdx];
-            pair[pivotIdx] = temp;
+            array[start] = array[right];
+            array[right] = pivotValue;
 
-            return end;
+            return right;
         }
     }
 }
