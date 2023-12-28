@@ -14,7 +14,7 @@ namespace Database_Management_System.FileManagement.QueryOperations
             _tableName = tableName;
         }
 
-        public override void execute()
+        public override void Execute()
         {
             File.Delete($"{Utility.metaFolderPath}{Utility.metaExtention}{_tableName}.bin");
             File.Delete($"{Utility.filesFolderPath}{_tableName}.bin");

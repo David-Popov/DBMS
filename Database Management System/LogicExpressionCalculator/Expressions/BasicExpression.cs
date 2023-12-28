@@ -22,7 +22,7 @@ namespace Database_Management_System.LogicExpressionCalculator.Expressions
             this.right = StringFormatter.Trim(right, '\"');
         }
 
-        public override bool evaluate()
+        public override bool Evaluate()
         {
             int result = StringFormatter.Compare(left, right);
             switch (op) 

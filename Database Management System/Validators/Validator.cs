@@ -11,7 +11,7 @@ namespace Database_Management_System.Validators
 {
     public static class Validator
     {
-        public static bool hasQuery(string src)
+        public static bool HasQuery(string src)
         {
             var arr = StringFormatter.Split(src);
             if (arr[0] == Queries.insert)
@@ -20,7 +20,7 @@ namespace Database_Management_System.Validators
             return Queries.isQuery(arr[0]);
         }
 
-        public static bool hasValidBrackets(string src)
+        public static bool HasValidBrackets(string src)
         {
             MyStack<char> brakets = new MyStack<char>();
             for (int i = 0; i < src.Length; ++i)

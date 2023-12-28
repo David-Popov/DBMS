@@ -10,6 +10,11 @@ namespace Database_Management_System.DataStructures
     {
         private T[] _data;
         private int _length;
+        public MyStack() 
+        {
+            _data = new T[1];
+            _length = 0;
+        }
 
         private void Resize()
         {
@@ -17,12 +22,6 @@ namespace Database_Management_System.DataStructures
             for (int i = 0; i < _length; ++i)
                 newData[i] = _data[i];
             _data = newData;
-        }
-
-        public MyStack() 
-        {
-            _data = new T[1];
-            _length = 0;
         }
 
         public T Peek()

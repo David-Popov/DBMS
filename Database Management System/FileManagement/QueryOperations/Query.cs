@@ -10,6 +10,6 @@ namespace Database_Management_System.FileManagement.QueryOperations
     {
         protected string _tableName;
 
-        abstract public void execute();
+        abstract public void Execute();
     }
 }

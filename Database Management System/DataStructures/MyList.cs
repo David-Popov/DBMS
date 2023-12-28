@@ -11,20 +11,7 @@ namespace Database_Management_System.DataStructures
     {
         private T[] _data;
         private int _length;
-        
-        public int Length 
-        { get { return _length; } }
-
-        public T[] Data
-        { get { return _data; } }
-
-        private void Resize()
-        {
-            T[] newData = new T[_data.Length * 2];
-            for (int i = 0; i < _length; ++i)
-                newData[i] = _data[i];
-            _data = newData;
-        }
+        public int Length { get { return _length; } }
 
         public MyList(MyList<T> other)
         {
@@ -44,13 +31,84 @@ namespace Database_Management_System.DataStructures
             _length = 0;
         }
 
-        public MyList<T> Append(T value)
+        private void Resize()
+        {
+            T[] newData = new T[_data.Length * 2];
+            for (int i = 0; i < _length; ++i)
+                newData[i] = _data[i];
+            _data = newData;
+        }
+
+        public MyList<T> Add(T value)
         {
             if (_length >= _data.Length)
                 Resize();
             _data[_length++] = value;
 
             return this;
+        }
+
+        public void RemoveAt(int index)
+        {
+            if (index < 0 || index >= _length)
+                throw new IndexOutOfRangeException();
+
+            for (int i = index; i < _length - 1; i++)
+            {
+                _data[i] = _data[i + 1];
+            }
+
+            _length--;
+        }
+
+        public void Remove(T value)
+        {
+            if (value != null)
+            {
+                return;
+            }
+
+            int index = IndexOf(value);
+
+            if (index >= 0)
+            {
+                RemoveAt(index);
+            }
+        }
+
+        public int IndexOf(T item)
+        {
+            for (int i = 0; i < _length; i++)
+            {
+                if (Equals(_data[i], item))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        public bool Contains(T item)
+        {
+            for (int i = 0; i < _length; i++)
+            {
+                if (Equals(_data[i], item))
+                    return true;
+            }
+            return false;
+        }
+
+        public T[] ToCustomArray()
+        {
+            var data = new T[_length];
+            Array.Copy(_data, data, _length);
+            return data;
+        }
+
+        public void Clear()
+        {
+            _length = 0;
+            _data = new T[_length];
         }
 
         public T this[int index]

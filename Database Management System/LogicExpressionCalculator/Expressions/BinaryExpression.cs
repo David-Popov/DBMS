@@ -21,12 +21,12 @@ namespace Database_Management_System.LogicExpressionCalculator.Expressions
             this.right = right;
         }
 
-        override public bool evaluate()
+        override public bool Evaluate()
         {
             switch (op) 
             { 
-                case LogicOperators.cAnd: return left.evaluate() && right.evaluate();
-                case LogicOperators.cOr: return left.evaluate() || right.evaluate();
+                case LogicOperators.cAnd: return left.Evaluate() && right.Evaluate();
+                case LogicOperators.cOr: return left.Evaluate() || right.Evaluate();
             }
 
             return false;
