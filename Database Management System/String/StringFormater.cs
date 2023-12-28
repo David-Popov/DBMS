@@ -135,9 +135,9 @@ namespace Database_Management_System.String
         {
             MyList<string> arr = new MyList<string>();
             int index = 0;
-            for (int i = 0; index < arr.Length; ++i)
+            for (int i = 0; index < src.Length; ++i)
             {
-                arr[i] = Substring(src, ref index, c);
+                arr.Add(Substring(src, ref index, c));
                 ++index;
             }
 

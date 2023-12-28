@@ -24,7 +24,12 @@ namespace Database_Management_System.LogicExpressionCalculator.Expressions
 
         public override bool Evaluate()
         {
-            int result = StringFormatter.Compare(left, right);
+            int result;
+            if (DateTime.TryParse(left, out var leftDate) && DateTime.TryParse(right, out var rightDate))
+                result = Comparer<DateTime>.Default.Compare(leftDate, rightDate);
+            else
+                result = StringFormatter.Compare(left, right);
+
             switch (op) 
             {
                 case LogicOperators.lt: return result == -1;

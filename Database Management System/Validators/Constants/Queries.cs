@@ -13,6 +13,7 @@ namespace Database_Management_System.Validators.Constants
         public const string drop = "DropTable";
         public const string list = "ListTables";
         public const string insert = "Insert";
+        public const string SELECT = "Select";
         public const string delete = "Delete";
         public const string from = "FROM";
         public const string into = "INTO";
