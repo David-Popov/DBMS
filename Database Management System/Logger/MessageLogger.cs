@@ -10,11 +10,11 @@ namespace Database_Management_System.Logger
 {
     public static class MessageLogger
     {
-        public static string WrongOperation(string operation) => $"{operation} operation is not supported!";
+        public static string WrongOperation() => "Operation is not supported!";
         public static string NonExistingType() => "You have entered a type which is not supported!";
         public static string NonExistingColumn(string columnType) => $"Column of type {columnType} do not exist!";
         public static string NonExistingValue(string columnName,string columnValue) => $"{columnName} do not have record with value: {columnValue}!";
-        public static string NonExistingTable(string tableName) => $"Table with name {tableName} do not exist";
+        public static string NonExistingTable() => "Table with that name do not exist";
         public static string NonExistingMetaTableFile(string tableName) => $"Meta file for {tableName} with name {Utility.metaExtention}{tableName} do not exist";
         public static string AppError(string message) => message;
         public static string NotDeletedRecordMessage() => "Record was not deleted successfuly!";
