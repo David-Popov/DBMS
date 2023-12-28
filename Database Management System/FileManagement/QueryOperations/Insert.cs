@@ -1,4 +1,5 @@
-﻿using Database_Management_System.String;
+﻿using Database_Management_System.Logger;
+using Database_Management_System.String;
 using Database_Management_System.Validators.Constants;
 using System.Text;
 
@@ -77,6 +78,11 @@ namespace Database_Management_System.FileManagement.QueryOperations
 
         public override void Execute()
         {
+            if (_tableName == string.Empty)
+            {
+                throw new ArgumentException(MessageLogger.EmptyFileName());
+            }
+
             var metadata = MetaHandler.ReadFile(_tableName, out int rowSize, out int rowCount);
 
             using (FileStream fileStream = new FileStream(@$"{Utility.filesFolderPath}{_tableName}.bin", FileMode.Append, FileAccess.Write))
@@ -104,8 +110,6 @@ namespace Database_Management_System.FileManagement.QueryOperations
                 }
 
                 MetaHandler.UpdateRowCountOnInsert(_tableName);
-
-                //bw.Flush();
             }
         }
     }
