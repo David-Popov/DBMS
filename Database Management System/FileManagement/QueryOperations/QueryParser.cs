@@ -1,4 +1,5 @@
-﻿using Database_Management_System.String;
+﻿using Database_Management_System.Logger;
+using Database_Management_System.String;
 using Database_Management_System.Validators.Constants;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,11 @@ namespace Database_Management_System.FileManagement.QueryOperations
     {
         public static Query CreateQuery(string src)
         {
+            if (StringFormatter.IsNullOrEmpty(src))
+            {
+                throw new ArgumentException(MessageLogger.NullOrEmptyString());
+            }
+
             src = StringFormatter.ClearInput(src);
             string query = StringFormatter.Substring(src, 0, ' ');
             
