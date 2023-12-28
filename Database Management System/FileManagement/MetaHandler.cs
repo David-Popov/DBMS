@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Database_Management_System.Logger;
 using Database_Management_System.Validators.Constants;
 
 namespace Database_Management_System.FileManagement
@@ -12,6 +12,11 @@ namespace Database_Management_System.FileManagement
     {
         public static void CreateFile(string fileName, ColumnInfo[] infos)
         {
+            if (fileName == string.Empty || fileName == " ")
+            {
+                throw new ArgumentException(MessageLogger.EmptyFileName());
+            }
+
             using (FileStream metaStream = new FileStream($"{Utility.metaFolderPath}{Utility.metaExtention}{fileName}.bin",
                    FileMode.Create, FileAccess.Write))
             {
@@ -33,6 +38,11 @@ namespace Database_Management_System.FileManagement
 
         public static ColumnInfo[] ReadFile(string fileName, out int rowSize, out int rowCount)
         {
+            if (fileName == string.Empty || fileName == " ")
+            {
+                throw new ArgumentException(MessageLogger.EmptyFileName());
+            }
+
             FileStream stream = new FileStream($"{Utility.metaFolderPath}{Utility.metaExtention}{fileName}.bin",
                                                FileMode.Open, FileAccess.Read);
 
@@ -51,9 +61,14 @@ namespace Database_Management_System.FileManagement
             return infos;
         }
 
-        public static void UpdateRowCountOnInsert(string tableName)
+        public static void UpdateRowCountOnInsert(string fileName)
         {
-            using (FileStream stream = new FileStream(@$"{Utility.metaFolderPath}{Utility.metaExtention}{tableName}.bin", FileMode.Open, FileAccess.ReadWrite))
+            if (fileName == string.Empty || fileName == " ")
+            {
+                throw new ArgumentException(MessageLogger.EmptyFileName());
+            }
+
+            using (FileStream stream = new FileStream(@$"{Utility.metaFolderPath}{Utility.metaExtention}{fileName}.bin", FileMode.Open, FileAccess.ReadWrite))
             {
                 BinaryReader br = new BinaryReader(stream);
                 BinaryWriter bw = new BinaryWriter(stream);
@@ -66,10 +81,15 @@ namespace Database_Management_System.FileManagement
             }
         }
 
-        public static void UpdateRowCountOnDelete(string tableName)
+        public static void UpdateRowCountOnDelete(string fileName)
         {
-            using (FileStream stream = new FileStream(@$"{Utility.metaFolderPath}{Utility.metaExtention}{tableName}.bin", FileMode.Open, FileAccess.ReadWrite))
+            using (FileStream stream = new FileStream(@$"{Utility.metaFolderPath}{Utility.metaExtention}{fileName}.bin", FileMode.Open, FileAccess.ReadWrite))
             {
+                if (fileName == string.Empty || fileName == " ")
+                {
+                    throw new ArgumentException(MessageLogger.EmptyFileName());
+                }
+
                 BinaryReader br = new BinaryReader(stream);
                 BinaryWriter bw = new BinaryWriter(stream);
 

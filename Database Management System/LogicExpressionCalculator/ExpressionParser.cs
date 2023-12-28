@@ -1,4 +1,5 @@
 ﻿using Database_Management_System.DataStructures;
+using Database_Management_System.Logger;
 using Database_Management_System.LogicExpressionCalculator.Expressions;
 using Database_Management_System.String;
 using Database_Management_System.Validators.Constants;
@@ -11,6 +12,11 @@ namespace Database_Management_System.LogicExpressionCalculator
         {
             private static string SpaceRemover(string src)
             {
+                if (StringFormatter.IsNullOrEmpty(src))
+                {
+                    throw new ArgumentNullException(MessageLogger.NullOrEmptyString());
+                }
+
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < src.Length; ++i)
                 {
@@ -23,6 +29,11 @@ namespace Database_Management_System.LogicExpressionCalculator
 
             private static string bracketFormatter(string src)
             {
+                if (StringFormatter.IsNullOrEmpty(src))
+                {
+                    throw new ArgumentNullException(MessageLogger.NullOrEmptyString());
+                }
+
                 MyStack<string> vars = new MyStack<string>();
 
                 int index = 1;
@@ -55,63 +66,76 @@ namespace Database_Management_System.LogicExpressionCalculator
             }
 
             private static void RPN(string src, StringBuilder res, MyStack<char> operations, ref int i, ref bool firstAppend)
-	        {
-                if (LogicOperators.isOperator(src[i])) {
-			        res.ConCat('|');
-			        if (operations.IsEmpty() || firstAppend) {
-				        operations.Push(src[i]);
-				        firstAppend = false;
-			        }
-			        else if (LogicOperators.Precedent(src[i]) >= LogicOperators.Precedent(operations.Peek()))
-				        operations.Push(src[i]);
-			        else {
-				        while (!operations.IsEmpty())
-				        {
-					        if (LogicOperators.Precedent(src[i]) <= LogicOperators.Precedent(operations.Peek()))
-					        {
-						        res.ConCat(operations.Pop());
-						        res.ConCat('|');
-					        }
-					        else
-						        break;
-				        }
-                        operations.Push(src[i]);
-			        }
-		        }
+            {
+                if (StringFormatter.IsNullOrEmpty(src))
+                {
+                    throw new ArgumentNullException(MessageLogger.NullOrEmptyString());
+                }
 
-                else 
+                if (LogicOperators.isOperator(src[i]))
+                {
+                    res.ConCat('|');
+                    if (operations.IsEmpty() || firstAppend)
+                    {
+                        operations.Push(src[i]);
+                        firstAppend = false;
+                    }
+                    else if (LogicOperators.Precedent(src[i]) >= LogicOperators.Precedent(operations.Peek()))
+                        operations.Push(src[i]);
+                    else
+                    {
+                        while (!operations.IsEmpty())
+                        {
+                            if (LogicOperators.Precedent(src[i]) <= LogicOperators.Precedent(operations.Peek()))
+                            {
+                                res.ConCat(operations.Pop());
+                                res.ConCat('|');
+                            }
+                            else
+                                break;
+                        }
+                        operations.Push(src[i]);
+                    }
+                }
+
+                else
                 {
                     if (src[i] != '(' && src[i] != ')')
                         res.ConCat(src[i]);
                 }
-	        }
+            }
 
             public static string Format(string src)
-	        {
-		        StringBuilder res = new StringBuilder("|");
+            {
+                if (StringFormatter.IsNullOrEmpty(src))
+                {
+                    throw new ArgumentNullException(MessageLogger.NullOrEmptyString());
+                }
+
+                StringBuilder res = new StringBuilder("|");
                 MyStack<char> operations = new MyStack<char>();
 
-		        for (int i = 0; i < src.Length; ++i) 
+                for (int i = 0; i < src.Length; ++i)
                 {
-			        if (src[i] == '(') 
+                    if (src[i] == '(')
                     {
-				        bool firstOp = true;
-				        while (src[++i] != ')')
-					        RPN(src, res, operations, ref i, ref firstOp);
-				        while (!operations.IsEmpty()) 
+                        bool firstOp = true;
+                        while (src[++i] != ')')
+                            RPN(src, res, operations, ref i, ref firstOp);
+                        while (!operations.IsEmpty())
                         {
-					        res.ConCat('|');
-					        res.ConCat(operations.Pop());
-				        }
+                            res.ConCat('|');
+                            res.ConCat(operations.Pop());
+                        }
                     }
                     else
                     {
                         bool firstOp = false;
                         RPN(src, res, operations, ref i, ref firstOp);
                     }
-		        }
+                }
 
-		        res.ConCat('|');
+                res.ConCat('|');
                 while (!operations.IsEmpty())
                 {
                     res.ConCat(operations.Pop());
@@ -120,12 +144,17 @@ namespace Database_Management_System.LogicExpressionCalculator
                 }
 
                 return bracketFormatter(SpaceRemover(res.C_str));
-	        }
+            }
         }
 
         public static string GetParsableExpression(string src)
         {
-            string[] operators = { LogicOperators.eq, LogicOperators.or, LogicOperators.not, 
+            if (StringFormatter.IsNullOrEmpty(src))
+            {
+                throw new ArgumentNullException(MessageLogger.NullOrEmptyString());
+            }
+
+            string[] operators = { LogicOperators.eq, LogicOperators.or, LogicOperators.not,
                                    LogicOperators.and, LogicOperators.ltoEq, LogicOperators.mtoEq };
             foreach (var op in operators)
                 src = StringFormatter.ReplaceAll(src, op, LogicOperators.GetReplacement(op));
@@ -151,6 +180,11 @@ namespace Database_Management_System.LogicExpressionCalculator
 
         public static string[] ExtractColumnNames(string src)
         {
+            if (StringFormatter.IsNullOrEmpty(src))
+            {
+                throw new ArgumentNullException(MessageLogger.NullOrEmptyString());
+            }
+
             MyList<string> res = new MyList<string>();
             for (int i = 0; i < src.Length; ++i)
             {
@@ -198,8 +232,8 @@ namespace Database_Management_System.LogicExpressionCalculator
                     brakets.Push(src[i]);
                 else if (src[i] == ')')
                     brakets.Pop();
-                else if(LogicOperators.isLogicExpressionOperator(src[i]) && brakets.IsEmpty())
-                    return new BasicExpression(src[i], 
+                else if (LogicOperators.isLogicExpressionOperator(src[i]) && brakets.IsEmpty())
+                    return new BasicExpression(src[i],
                                StringFormatter.Substring(src, 0, i - 1),
                                StringFormatter.Substring(src, i + 1, src.Length - 1));
                 else if (LogicOperators.isLogicOperator(src[i]) && brakets.IsEmpty())

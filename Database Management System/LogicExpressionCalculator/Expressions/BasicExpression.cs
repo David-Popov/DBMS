@@ -1,4 +1,6 @@
-﻿using Database_Management_System.String;
+﻿using Database_Management_System.Exceptions;
+using Database_Management_System.Logger;
+using Database_Management_System.String;
 using Database_Management_System.Validators.Constants;
 using System;
 using System.Collections.Generic;
@@ -39,7 +41,7 @@ namespace Database_Management_System.LogicExpressionCalculator.Expressions
                 case LogicOperators.cEq: return result == 0;
                 case LogicOperators.cNEq: return result == 1 || result == -1;
 
-                default: throw new Exception("Unknown operator!");
+                default: throw new MyException(MessageLogger.UnknownOperator());
             }
         }
     }
