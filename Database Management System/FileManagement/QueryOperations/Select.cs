@@ -95,14 +95,21 @@ namespace Database_Management_System.FileManagement.QueryOperations
             int[] colIndexes = data.GetColumnIndexes(columns);
             for (int i = 0; i < colIndexes.Length; ++i)
             {
-                Dictionary<string, MyPair<int, int>> counter = new Dictionary<string, MyPair<int, int>>();
+                MyDictionary<string, MyPair<MyList<int>, int>> counter = new MyDictionary<string, MyPair<MyList<int>, int>>();
                 for (int j = 0; j < rows.Length; ++j)
                 {
                     var key = data[rows[j]][colIndexes[i]];
-                    if (!counter.ContainsKey(key))
-                        counter.Add(key, MyPair<int, int>.MakePair(rows[j], 1));
+                    if (!counter.HasKey(key))
+                    {
+                        var rowIndexes = new MyList<int>();
+                        rowIndexes.Add(rows[j]);
+                        counter.Add(key, MyPair<MyList<int>, int>.MakePair(rowIndexes, 1));
+                    }
                     else
+                    {
+                        counter[key].First!.Add(rows[j]);
                         ++counter[key].Second;
+                    }
                 }
 
                 foreach (var item in counter)
@@ -110,7 +117,8 @@ namespace Database_Management_System.FileManagement.QueryOperations
                     var count = item.Value;
                     while (count.Second > 1)
                     {
-                        rows.Remove(count.First);
+                        rows.Remove(count.First![count.First.Length - 1]);
+                        count.First.PopBack();
                         --count.Second;
                     }
                 }
