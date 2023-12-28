@@ -43,8 +43,8 @@ namespace Database_Management_System.DataStructures
         {
             if (_length >= _data.Length)
                 Resize();
-            _data[_length++] = value;
 
+            _data[_length++] = value;
             return this;
         }
 
@@ -53,44 +53,36 @@ namespace Database_Management_System.DataStructures
             if (index < 0 || index >= _length)
                 throw new IndexOutOfRangeException();
 
-            for (int i = index; i < _length - 1; i++)
-            {
+            for (int i = index; i < _length - 1; ++i)
                 _data[i] = _data[i + 1];
-            }
 
-            _length--;
+            --_length;
         }
 
         public void Remove(T value)
         {
-            if (value != null)
-            {
+            if (value is null)
                 return;
-            }
 
             int index = IndexOf(value);
 
             if (index >= 0)
-            {
                 RemoveAt(index);
-            }
         }
 
         public int IndexOf(T item)
         {
-            for (int i = 0; i < _length; i++)
+            for (int i = 0; i < _length; ++i)
             {
                 if (Equals(_data[i], item))
-                {
                     return i;
-                }
             }
             return -1;
         }
 
         public bool Contains(T item)
         {
-            for (int i = 0; i < _length; i++)
+            for (int i = 0; i < _length; ++i)
             {
                 if (Equals(_data[i], item))
                     return true;
@@ -98,7 +90,7 @@ namespace Database_Management_System.DataStructures
             return false;
         }
 
-        public T[] ToCustomArray()
+        public T[] ToArray()
         {
             var data = new T[_length];
             Array.Copy(_data, data, _length);
@@ -108,11 +100,10 @@ namespace Database_Management_System.DataStructures
         public void Clear()
         {
             _length = 0;
-            _data = new T[_length];
         }
 
         public T this[int index]
-        { get { return _data[index]; } set { _data[index] = value;} }
+        { get { return _data[index]; } set { _data[index] = value; } }
 
         public IEnumerator<T> GetEnumerator()
         {

@@ -182,7 +182,7 @@ namespace Database_Management_System.LogicExpressionCalculator
                     res.Add(s.C_str);
             }
 
-            return res.Data;
+            return res.ToArray();
         }
 
         public static Expression? ParseExpression(string src)

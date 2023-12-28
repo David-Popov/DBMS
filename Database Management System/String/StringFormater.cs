@@ -133,15 +133,15 @@ namespace Database_Management_System.String
 
         public static string[] Split(string src, char c = ' ')
         {
-            string[] arr = new string[Count(src, c) + 1];
+            MyList<string> arr = new MyList<string>();
             int index = 0;
-            for (int i = 0; i < arr.Length; ++i)
+            for (int i = 0; index < arr.Length; ++i)
             {
                 arr[i] = Substring(src, ref index, c);
                 ++index;
             }
 
-            return arr;
+            return arr.ToArray();
         }
 
         public static string Replace(string src, string replace, string what)

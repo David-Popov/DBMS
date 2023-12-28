@@ -12,7 +12,5 @@ using Database_Management_System.LogicExpressionCalculator;
 //var q = QueryParser.CreateQuery("Insert INTO Sample (Id, Name) VALUES (3, \"David\")");
 //q.Execute();
 
-
-
 DataArray data = new DataArray("Sample");
 data.Print();

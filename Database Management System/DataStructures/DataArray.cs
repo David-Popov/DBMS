@@ -171,7 +171,7 @@ namespace Database_Management_System.DataStructures
                 }
             }
 
-            return indexes.Data;
+            return indexes.ToArray();
         }
 
         public void Refresh()
