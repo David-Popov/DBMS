@@ -126,9 +126,6 @@ namespace Database_Management_System.DataStructures
 
             PrintColumns(ref padding);
 
-            Console.WriteLine();
-            Console.WriteLine(new string('-', (padding + 4) * Columns.Length + 1));
-
             for (int i = 0; i < this.Length; i++)
             {
                 var data = this[i].Data;
