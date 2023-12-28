@@ -75,7 +75,7 @@ namespace Database_Management_System.FileManagement.QueryOperations
             }
         }
 
-        public override void execute()
+        public override void Execute()
         {
             var metadata = MetaHandler.ReadFile(_tableName, out int rowSize, out int rowCount);
 

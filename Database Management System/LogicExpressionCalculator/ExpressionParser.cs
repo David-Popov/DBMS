@@ -179,7 +179,7 @@ namespace Database_Management_System.LogicExpressionCalculator
                 }
 
                 if (s.Length != 0)
-                    res.Append(s.C_str);
+                    res.Add(s.C_str);
             }
 
             return res.Data;

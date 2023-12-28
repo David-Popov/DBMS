@@ -19,7 +19,7 @@ namespace Database_Management_System.FileManagement
                 writer.Write(0);
                 int rowSize = 0;
                 foreach (var info in infos)
-                    rowSize += info.getDataSize();
+                    rowSize += info.GetDataSize();
                 writer.Write(rowSize);
                 writer.Write(infos.Length);
                 foreach (ColumnInfo info in infos)

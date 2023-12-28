@@ -51,7 +51,7 @@ namespace Database_Management_System.FileManagement.QueryOperations
             }
         }
 
-        public override void execute()
+        public override void Execute()
         {
             MetaHandler.CreateFile(_tableName, columnsInfos);
         }

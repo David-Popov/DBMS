@@ -86,7 +86,7 @@ namespace Database_Management_System.DataStructures
 
             foreach (var col in Columns)
             {
-                int len = col.getMaxPrintLen();
+                int len = col.GetMaxPrintLen();
                 padding = padding < len ? len : padding;
             }
 
@@ -167,7 +167,7 @@ namespace Database_Management_System.DataStructures
                 foreach (var columnName in columnNames)
                 {
                     if (Columns[i].name == columnName)
-                        indexes.Append(i);
+                        indexes.Add(i);
                 }
             }
 

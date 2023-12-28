@@ -12,7 +12,7 @@ namespace Database_Management_System.FileManagement.QueryOperations
 {
     public class ListTables : Query
     {
-        public override void execute()
+        public override void Execute()
         {
             string[] paths = Directory.GetFiles(Utility.filesFolderPath);
             string[] fileNames = new string[paths.Length];

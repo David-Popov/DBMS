@@ -24,7 +24,7 @@ namespace Database_Management_System.FileManagement.QueryOperations
             colNames = ExpressionParser.ExtractColumnNames(expr);
         }
 
-        public override void execute()
+        public override void Execute()
         {
             DataArray data = new DataArray(_tableName);
             int[] colIndexes = data.GetColumnIndexes(colNames);
@@ -36,7 +36,7 @@ namespace Database_Management_System.FileManagement.QueryOperations
                     exprCopy = StringFormatter.ReplaceAll(expr, colNames[j], data[i][colIndexes[j]]);
 
                 Expression expression = ExpressionParser.ParseExpression(exprCopy)!;
-                if (expression.evaluate())
+                if (expression.Evaluate())
                 {
                     data.DeleteRecord(i);
                     --i;

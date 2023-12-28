@@ -16,7 +16,7 @@ namespace Database_Management_System.FileManagement.QueryOperations
             _tableName = src;
         }
 
-        public override void execute()
+        public override void Execute()
         {
             int rowSize = 0, rowCount = 0;
             ColumnInfo[] infos = MetaHandler.ReadFile(_tableName, out rowSize, out rowCount);
@@ -24,7 +24,7 @@ namespace Database_Management_System.FileManagement.QueryOperations
             int padding = 0;
             foreach (ColumnInfo info in infos)
             {
-                int maxLen = info.getMaxPrintLen();
+                int maxLen = info.GetMaxPrintLen();
                 padding = padding < maxLen ? maxLen : padding;
             }
 

@@ -17,7 +17,7 @@ namespace Database_Management_System.FileManagement
 
         private bool _hasDefault;
 
-        public int getMaxPrintLen()
+        public int GetMaxPrintLen()
         {
             int len = name.Length;
             len = len < type.Length ? type.Length : len;
@@ -29,7 +29,7 @@ namespace Database_Management_System.FileManagement
             return len;
         }
 
-        public int getDataSize()
+        public int GetDataSize()
         {
             switch(type)
             {
