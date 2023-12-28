@@ -26,5 +26,10 @@ namespace Database_Management_System.DataStructures
         }
 
         public static bool operator >(MyPair<T, N> left, MyPair<T, N> right) => !(left < right);
+
+        public static MyPair<T, N> MakePair(T first, N second)
+        {
+            return new MyPair<T, N>(first, second);
+        }
     }
 }

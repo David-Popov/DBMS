@@ -21,6 +21,8 @@ namespace Database_Management_System.Validators.Constants
         public const string distinct = "DISTINCT";
         public const string orderby = "ORDER BY";
         public const string values = "VALUES";
+        public const string ASC = "ASC";
+        public const string DESC = "DESC";
 
         public static bool isQuery(string src)
         {

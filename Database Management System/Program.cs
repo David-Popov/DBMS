@@ -12,8 +12,11 @@ using Database_Management_System.LogicExpressionCalculator;
 //var q = QueryParser.CreateQuery("Insert INTO Sample (Id, Name) VALUES (3, \"David\")");
 //q.Execute();
 
-DataArray data = new DataArray("Sample");
-data.Print([0, 1]);
+var select = QueryParser.CreateQuery("Select DISTINCT Name, DateBirth FROM Sample WHERE Name <> \"David\"");
+select.Execute();
+
+/*DataArray data = new DataArray("Sample");
+data.Print([0, 1]);*/
 
 /*var drop = QueryParser.CreateQuery("DropTable Sample");
 
