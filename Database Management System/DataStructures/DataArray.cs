@@ -71,16 +71,22 @@ namespace Database_Management_System.DataStructures
             return result;
         }
 
-        public RowValues this[int index]
+        private void PrintColumns(ref int padding)
         {
-            get
+            for (int i = 0; i < Columns.Length; i++)
             {
-                _stream.Seek(Offset + index * RowSize, SeekOrigin.Begin);
-                return BytesToString(Columns);
+                double namePadding = Math.Ceiling(((double)(padding - Columns[i].name.Length)) / 2 + 1);
+                if (i == 0)
+                    Console.Write($"|{StringFormatter.FixedPrint(Columns[i].name, (int)namePadding)}|");
+                else
+                    Console.Write($"{StringFormatter.FixedPrint(Columns[i].name, (int)namePadding)}|");
             }
+
+            Console.WriteLine();
+            Console.WriteLine(new string('-', (padding + 4) * Columns.Length + 1));
         }
 
-        public void Print()
+        private int CalculatePadding()
         {
             int padding = 0;
 
@@ -100,16 +106,25 @@ namespace Database_Management_System.DataStructures
                 }
             }
 
+            return padding;
+        }
+
+        public RowValues this[int index]
+        {
+            get
+            {
+                _stream.Seek(Offset + index * RowSize, SeekOrigin.Begin);
+                return BytesToString(Columns);
+            }
+        }
+
+        public void Print()
+        {
+            int padding = CalculatePadding();
+
             Refresh();
 
-            for (int i = 0; i < Columns.Length; i++)
-            {
-                double namePadding = Math.Ceiling(((double)(padding - Columns[i].name.Length)) / 2 + 1);
-                if (i == 0)
-                    Console.Write($"|{StringFormatter.FixedPrint(Columns[i].name, (int)namePadding)}|");
-                else
-                    Console.Write($"{StringFormatter.FixedPrint(Columns[i].name, (int)namePadding)}|");
-            }
+            PrintColumns(ref padding);
 
             Console.WriteLine();
             Console.WriteLine(new string('-', (padding + 4) * Columns.Length + 1));
@@ -129,6 +144,26 @@ namespace Database_Management_System.DataStructures
             }
         }
 
+        public void Print(int[] rowIndexes)
+        {
+            int padding = CalculatePadding();
+
+            PrintColumns(ref padding);
+
+            foreach (var i in rowIndexes)
+            {
+                var data = this[i].Data;
+                for (int j = 0; j < data.Length; j++)
+                {
+                    double namePadding = Math.Ceiling(((double)(padding - data[j].Length)) / 2 + 1);
+                    if (j == 0)
+                        Console.Write($"|{StringFormatter.FixedPrint(data[j], (int)namePadding)}|");
+                    else
+                        Console.Write($"{StringFormatter.FixedPrint(data[j], (int)namePadding)}|");
+                }
+                Console.WriteLine();
+            }
+        }
 
         public void DeleteRecord(int index)
         {
@@ -162,7 +197,7 @@ namespace Database_Management_System.DataStructures
         {
             MyList<int> indexes = new MyList<int>(columnNames.Length);
 
-            for (int i = 0; i < Columns.Length; ++i) 
+            for (int i = 0; i < Columns.Length; ++i)
             {
                 foreach (var columnName in columnNames)
                 {
@@ -188,7 +223,7 @@ namespace Database_Management_System.DataStructures
                 Data = new string[columnCount];
             }
 
-            public string this[int index] 
+            public string this[int index]
             { get { return Data[index]; } }
         }
     }

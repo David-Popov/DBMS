@@ -6,15 +6,14 @@ using Database_Management_System.Validators.Constants;
 using Database_Management_System.LogicExpressionCalculator.Expressions;
 using Database_Management_System.LogicExpressionCalculator;
 
-var q = QueryParser.CreateQuery("Delete FROM Sample WHERE BirthDate > \"01.01.1800\"");
-q.Execute();
+//var q = QueryParser.CreateQuery("Delete FROM Sample WHERE BirthDate > \"01.01.1800\"");
+//q.Execute();
 
-/*
-var q = QueryParser.CreateQuery("Insert INTO Sample (Id, Name) VALUES (3, \"David\")");
-q.Execute();
-*/
-/*DataArray data = new DataArray("Sample");
-data.Print();*/
+//var q = QueryParser.CreateQuery("Insert INTO Sample (Id, Name) VALUES (3, \"David\")");
+//q.Execute();
+
+DataArray data = new DataArray("Sample");
+data.Print([0, 1]);
 
 /*var drop = QueryParser.CreateQuery("DropTable Sample");
 
