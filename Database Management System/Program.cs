@@ -14,21 +14,22 @@ using System.Collections;
 //var q = QueryParser.CreateQuery("Insert INTO Sample (Id, Name) VALUES (3, \"David\")");
 //q.Execute();
 
-var select = QueryParser.CreateQuery("Select DISTINCT Name, DateBirth FROM Sample WHERE Name <> \"David\"");
-select.Execute();
+//var select = QueryParser.CreateQuery("Select DISTINCT Name, DateBirth FROM Sample WHERE Name <> \"David\"");
+//select.Execute();
 
 /*DataArray data = new DataArray("Sample");
 data.Print([0, 1]);*/
 
-var dict = new MyDictionary<string, string>();
-dict.Add("banana", "1.23");
-dict.Add("apple", "1.25");
-dict.Add("apple", "1.21");
-dict.Add("peach", "1.22");
+var arr = new MyPair<int, int>[4];
+arr[0] = new MyPair<int, int>(2, 1);
+arr[1] = new MyPair<int, int>(3, 1);
+arr[2] = new MyPair<int, int>(1, 1);
+arr[3] = new MyPair<int, int>(4, 1);
+var res = QuickSort.Sort<int,int>(arr, 0, arr.Length - 1, true);
 
-foreach (var item in dict)
+foreach (var item in res)
 {
-    Console.WriteLine($"{item.Key} - {item.Value}");
+    Console.WriteLine(item.First + " " + item.Second);
 }
 
 /*var drop = QueryParser.CreateQuery("DropTable Sample");

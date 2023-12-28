@@ -7,41 +7,94 @@ using System.Threading.Tasks;
 
 namespace Database_Management_System.Algorythms
 {
-    public static class QuickSort<T>
+    public static class QuickSort
     {
-        public static MyPair<T, T>[] Sort(MyPair<T, T>[] pair, int start, int end)
+        public static MyPair<T,N>[] Sort<T,N>(MyPair<T, N>[] pair, int start, int end, bool reverse) where T : IComparable<T> where N : IComparable<N>
         {
-            SortData(pair, start, end);
+            if (reverse)
+            {
+                SortDataDesc(pair, start, end);
+            }
+            else
+            {
+                SortDataAsc(pair, start, end);
+            }
+
 
             return pair;
         }
 
-        private static void SortData(MyPair<T, T>[] pair, int start, int end)
+        private static void SortDataAsc<T,N>(MyPair<T, N>[] pair, int start, int end) where T : IComparable<T> where N : IComparable<N>
         {
             if (start < end)
             {
-                int pivot = Partition(pair, start, end);
+                int pivot = PartitionAsc(pair, start, end);
 
                 if (pivot > 1)
-                    SortData(pair, start, pivot - 1);
+                    SortDataAsc(pair, start, pivot - 1);
 
                 if (pivot + 1 > end)
-                    SortData(pair, start + 1, pivot);
+                    SortDataAsc(pair, start + 1, pivot);
             }
         }
 
-        private static int Partition(MyPair<T, T>[] pair, int start, int end)
+        private static void SortDataDesc<T, N>(MyPair<T, N>[] pair, int start, int end) where T : IComparable<T> where N : IComparable<N>
         {
-            MyPair<T, T> temp;
+            if (start < end)
+            {
+                int pivot = PartitionDesc(pair, start, end);
+
+                if (pivot > 1)
+                    SortDataDesc(pair, start, pivot - 1);
+
+                if (pivot + 1 > end)
+                    SortDataDesc(pair, start + 1, pivot);
+            }
+        }
+
+        private static int PartitionAsc<T,N>(MyPair<T, N>[] pair, int start, int end) where T : IComparable<T> where N : IComparable<N>
+        {
+            MyPair<T, N> temp;
             int pivotIdx = start++;
+            MyPair<T, N> pivotValue = pair[pivotIdx];
 
             while (true)
             {
-
-                while (start <= end && pair[start] < pair[pivotIdx])
+                while (start <= end && pair[start] < pivotValue)
                     start++;
 
-                while (start <= end && pair[start] > pair[pivotIdx])
+                while (start <= end && pair[end] > pivotValue)
+                    end--;
+
+                if (start >= end)
+                    break;
+                else
+                {
+                    temp = pair[start];
+                    pair[start] = pair[end];
+                    pair[end] = temp;
+                }
+            }
+
+            temp = pair[end];
+            pair[end] = pair[pivotIdx];
+            pair[pivotIdx] = temp;
+
+            return end;
+        }
+
+        private static int PartitionDesc<T, N>(MyPair<T, N>[] pair, int start, int end) where T : IComparable<T> where N : IComparable<N>
+        {
+            MyPair<T, N> temp;
+            int pivotIdx = start++;
+            MyPair<T, N> pivotValue = pair[pivotIdx];
+
+            while (true)
+            {
+                while (start <= end && pair[start] > pivotValue)
+                    start++;
+
+                while (start <= end && pair[end] < pivotValue)
                     end--;
 
                 if (start >= end)
