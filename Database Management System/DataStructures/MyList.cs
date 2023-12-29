@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -107,8 +108,7 @@ namespace Database_Management_System.DataStructures
             --_length;
         }
 
-        public T this[int index]
-        { get { return _data[index]; } set { _data[index] = value; } }
+        public T this[int index] { get { return _data[index]; } set { _data[index] = value; } }
 
         public IEnumerator<T> GetEnumerator()
         {
@@ -117,7 +117,7 @@ namespace Database_Management_System.DataStructures
         }
 
         IEnumerator IEnumerable.GetEnumerator()
-        { 
+        {
             return GetEnumerator();
         }
     }

@@ -19,6 +19,7 @@ namespace Database_Management_System.FileManagement.QueryOperations
         private bool hasDistinct;
         private bool hasOrderBy;
 
+        //Select Constructor
         public Select(string src)
         {
             int fromStart = StringFormatter.IndexOf(src, Queries.from);
@@ -200,7 +201,7 @@ namespace Database_Management_System.FileManagement.QueryOperations
             ranges.Add(MyPair<int, int>.MakePair(0, rows.Length - 1));
             for (int i = 0; i < colIndexes!.Length; ++i)
             {
-                switch(colTypes[i])
+                switch (colTypes[i])
                 {
                     case Utility.typeInt: rows = OrderByInt(data, rows, colIndexes, ranges, i); break;
                     case Utility.typeString: rows = OrderByString(data, rows, colIndexes, ranges, i); break;
@@ -237,28 +238,29 @@ namespace Database_Management_System.FileManagement.QueryOperations
 
         public override void Execute()
         {
-            DataArray data = new DataArray(_tableName);
-            MyList<int> rows = new MyList<int>();
-
-            int[] colIndexes = data.GetColumnIndexes(columns);
-
-            if (hasWhere)
-                rows = Where(data, rows);
-            else
+            using (DataArray data = new DataArray(_tableName))
             {
-                for (int i = 0; i < data.Length; ++i)
-                    rows.Add(i);
+                MyList<int> rows = new MyList<int>();
+                int[] colIndexes = data.GetColumnIndexes(columns);
+
+                if (hasWhere)
+                    rows = Where(data, rows);
+                else
+                {
+                    for (int i = 0; i < data.Length; ++i)
+                        rows.Add(i);
+                }
+
+                if (hasDistinct)
+                    rows = Distinct(data, rows, colIndexes);
+
+                if (hasOrderBy)
+                    rows = OrderBy(data, rows);
+
+                data.PrintSelectedRecordsAndColumns(rows.ToArray(), colIndexes);
+
+                Console.WriteLine($"Returned {rows.Length} records.");
             }
-
-            if (hasDistinct)
-                rows = Distinct(data, rows, colIndexes);
-
-            if (hasOrderBy)
-                rows = OrderBy(data, rows);
-
-            data.PrintSelectedRecordsAndColumns(rows.ToArray(), colIndexes);
-
-            Console.WriteLine($"Returned {rows.Length} records.");
         }
     }
 }

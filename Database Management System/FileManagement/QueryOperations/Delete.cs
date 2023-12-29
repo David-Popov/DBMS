@@ -16,7 +16,7 @@ namespace Database_Management_System.FileManagement.QueryOperations
         private string expr;
         private string[] colNames;
 
-        public Delete(string src) 
+        public Delete(string src)
         {
             _tableName = StringFormatter.Substring(src, 0, ' ');
             expr = ExpressionParser.GetParsableExpression(
@@ -26,26 +26,28 @@ namespace Database_Management_System.FileManagement.QueryOperations
 
         public override void Execute()
         {
-            DataArray data = new DataArray(_tableName);
-            int[] colIndexes = data.GetColumnIndexes(colNames);
-            int deletedRecords = 0;
-
-            for (int i = 0; i < data.Length; ++i)
+            using (DataArray data = new DataArray(_tableName))
             {
-                string exprCopy = "";
-                for (int j = 0; j < colIndexes.Length; ++j)
-                    exprCopy = StringFormatter.ReplaceAll(expr, colNames[j], data[i][colIndexes[j]]);
+                int[] colIndexes = data.GetColumnIndexes(colNames);
+                int deletedRecords = 0;
 
-                Expression expression = ExpressionParser.ParseExpression(exprCopy)!;
-                if (expression.Evaluate())
+                for (int i = 0; i < data.Length; ++i)
                 {
-                    data.DeleteRecord(i);
-                    --i;
-                    ++deletedRecords;
-                }
-            }
+                    string exprCopy = "";
+                    for (int j = 0; j < colIndexes.Length; ++j)
+                        exprCopy = StringFormatter.ReplaceAll(expr, colNames[j], data[i][colIndexes[j]]);
 
-            Console.WriteLine($"Successfully deleted {deletedRecords} records.");
+                    Expression expression = ExpressionParser.ParseExpression(exprCopy)!;
+                    if (expression.Evaluate())
+                    {
+                        data.DeleteRecord(i);
+                        --i;
+                        ++deletedRecords;
+                    }
+                }
+
+                Console.WriteLine($"Successfully deleted {deletedRecords} records.");
+            }
         }
     }
 }
