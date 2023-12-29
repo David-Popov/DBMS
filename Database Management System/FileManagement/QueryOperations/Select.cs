@@ -5,6 +5,7 @@ using Database_Management_System.Validators.Constants;
 using Database_Management_System.LogicExpressionCalculator.Expressions;
 using Database_Management_System.Algorithms;
 using System;
+using System.Globalization;
 
 namespace Database_Management_System.FileManagement.QueryOperations
 {
@@ -101,7 +102,7 @@ namespace Database_Management_System.FileManagement.QueryOperations
         {
             var pairs = new MyPair<DateTime, int>[rows.Length];
             for (int j = 0; j < rows.Length; ++j)
-                pairs[j] = MyPair<DateTime, int>.MakePair(DateTime.Parse(data[rows[j]][colIndexes[columnIndex]]), rows[j]);
+                pairs[j] = MyPair<DateTime, int>.MakePair(DateTime.ParseExact(data[rows[j]][colIndexes[columnIndex]], "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None), rows[j]);
 
             for (int j = 0; j < ranges.Length; ++j)
                 QuickSort.Sort<MyPair<DateTime, int>>(pairs, ranges[j].First, ranges[j].Second, orderStyle![columnIndex]);
@@ -200,7 +201,7 @@ namespace Database_Management_System.FileManagement.QueryOperations
             ranges.Add(MyPair<int, int>.MakePair(0, rows.Length - 1));
             for (int i = 0; i < colIndexes!.Length; ++i)
             {
-                switch(colTypes[i])
+                switch (colTypes[i])
                 {
                     case Utility.typeInt: rows = OrderByInt(data, rows, colIndexes, ranges, i); break;
                     case Utility.typeString: rows = OrderByString(data, rows, colIndexes, ranges, i); break;
@@ -237,36 +238,38 @@ namespace Database_Management_System.FileManagement.QueryOperations
 
         public override void Execute()
         {
-            DataArray data = new DataArray(_tableName);
-            MyList<int> rows = new MyList<int>();
-
-            int[] colIndexes;
-            if (columns[0] == "*")
+            using (DataArray data = new DataArray(_tableName))
             {
-                colIndexes = new int[data.GetColumnsCount()];
-                for (int i = 0; i < colIndexes.Length; ++i)
-                    colIndexes[i] = i;
+                MyList<int> rows = new MyList<int>();
+
+                int[] colIndexes;
+                if (columns[0] == "*")
+                {
+                    colIndexes = new int[data.GetColumnsCount()];
+                    for (int i = 0; i < colIndexes.Length; ++i)
+                        colIndexes[i] = i;
+                }
+                else
+                    colIndexes = data.GetColumnIndexes(columns);
+
+                if (hasWhere)
+                    rows = Where(data, rows);
+                else
+                {
+                    for (int i = 0; i < data.Length; ++i)
+                        rows.Add(i);
+                }
+
+                if (hasDistinct)
+                    rows = Distinct(data, rows, colIndexes);
+
+                if (hasOrderBy)
+                    rows = OrderBy(data, rows);
+
+                data.PrintSelectedRecordsAndColumns(rows.ToArray(), colIndexes);
+
+                Console.WriteLine($"Returned {rows.Length} records.");
             }
-            else
-                colIndexes = data.GetColumnIndexes(columns);
-
-            if (hasWhere)
-                rows = Where(data, rows);
-            else
-            {
-                for (int i = 0; i < data.Length; ++i)
-                    rows.Add(i);
-            }
-
-            if (hasDistinct)
-                rows = Distinct(data, rows, colIndexes);
-
-            if (hasOrderBy)
-                rows = OrderBy(data, rows);
-
-            data.PrintSelectedRecordsAndColumns(rows.ToArray(), colIndexes);
-
-            Console.WriteLine($"Returned {rows.Length} records.");
         }
     }
 }

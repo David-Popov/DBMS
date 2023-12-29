@@ -10,7 +10,7 @@ using System.Xml.Linq;
 
 namespace Database_Management_System.DataStructures
 {
-    public class DataArray
+    public class DataArray : IDisposable
     {
         private readonly BinaryReader _br;
         private readonly BinaryWriter _bw;
@@ -282,6 +282,22 @@ namespace Database_Management_System.DataStructures
             }
 
             return padding;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _br?.Dispose();
+                _bw?.Dispose();
+                _stream?.Dispose();
+            }
         }
 
         public void Refresh()
