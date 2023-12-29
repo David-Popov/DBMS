@@ -122,7 +122,7 @@ namespace Database_Management_System.FileManagement.QueryOperations
             if (hasOrderBy)
                 rows = OrderBy(data, rows);
 
-            data.Print(rows.ToArray());
+            data.PrintSelectedRecords(rows.ToArray());
         }
     }
 }

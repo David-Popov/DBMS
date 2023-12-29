@@ -14,11 +14,11 @@ using System.Collections;
 //var q = QueryParser.CreateQuery("Insert INTO Sample (Id, Name) VALUES (3, \"David\")");
 //q.Execute();
 
-var select = QueryParser.CreateQuery("Select DISTINCT Id, Name FROM Sample WHERE Name <> \"David\"");
-select.Execute();
+//var select = QueryParser.CreateQuery("Select DISTINCT Id, Name FROM Sample WHERE Name <> \"David\"");
+//select.Execute();
 
-/*DataArray data = new DataArray("Sample");
-data.Print([0, 1]);*/
+DataArray data = new DataArray("Sample");
+data.PrintSelectedRecordsAndColumns([0,3],[0,1]);
 
 /*var arr = new MyPair<int, int>[4];
 arr[0] = new MyPair<int, int>(2, 1);
