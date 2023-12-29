@@ -32,6 +32,8 @@ namespace Database_Management_System.FileManagement.QueryOperations
                 double namePadding = Math.Ceiling(((double)(maxPadding - table.Length)) / 2 + 1);
                 Console.WriteLine($"|{StringFormatter.FixedPrint(table, (int)namePadding)}|");
             }
+
+            Console.WriteLine($"Returned {fileNames.Length} tables.");
         }
     }
 }

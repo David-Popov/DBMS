@@ -28,6 +28,7 @@ namespace Database_Management_System.FileManagement.QueryOperations
         {
             DataArray data = new DataArray(_tableName);
             int[] colIndexes = data.GetColumnIndexes(colNames);
+            int deletedRecords = 0;
 
             for (int i = 0; i < data.Length; ++i)
             {
@@ -40,8 +41,11 @@ namespace Database_Management_System.FileManagement.QueryOperations
                 {
                     data.DeleteRecord(i);
                     --i;
+                    ++deletedRecords;
                 }
             }
+
+            Console.WriteLine($"Successfully deleted {deletedRecords} records.");
         }
     }
 }

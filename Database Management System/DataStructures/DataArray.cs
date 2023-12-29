@@ -124,6 +124,16 @@ namespace Database_Management_System.DataStructures
             return indexes.ToArray();
         }
 
+        public string[] GetColumnTypes(int[] columnIndexes)
+        {
+            MyList<string> types = new MyList<string>(columnIndexes.Length);
+
+            for (int i = 0; i < columnIndexes.Length; ++i)
+                types.Add(Columns[columnIndexes[i]].type);
+
+            return types.ToArray();
+        }
+
         public void PrintAllRecords()
         {
             int padding = CalculatePadding();

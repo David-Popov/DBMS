@@ -54,6 +54,7 @@ namespace Database_Management_System.FileManagement.QueryOperations
         public override void Execute()
         {
             MetaHandler.CreateFile(_tableName, columnsInfos);
+            Console.WriteLine($"Table {_tableName} successfully created.");
         }
     }
 }

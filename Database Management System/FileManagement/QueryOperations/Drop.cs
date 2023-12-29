@@ -18,6 +18,8 @@ namespace Database_Management_System.FileManagement.QueryOperations
         {
             File.Delete($"{Utility.metaFolderPath}{Utility.metaExtention}{_tableName}.bin");
             File.Delete($"{Utility.filesFolderPath}{_tableName}.bin");
+
+            Console.WriteLine($"Successfully deleted table {_tableName}");
         }
     }
 }

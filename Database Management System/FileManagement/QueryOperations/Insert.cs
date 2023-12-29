@@ -110,6 +110,8 @@ namespace Database_Management_System.FileManagement.QueryOperations
                 }
 
                 MetaHandler.UpdateRowCountOnInsert(_tableName);
+
+                Console.WriteLine($"Record successfully inserted.");
             }
         }
     }
