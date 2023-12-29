@@ -3,20 +3,13 @@ using Database_Management_System.LogicExpressionCalculator;
 using Database_Management_System.String;
 using Database_Management_System.Validators.Constants;
 using Database_Management_System.LogicExpressionCalculator.Expressions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Database_Management_System.FileManagement.QueryOperations
 {
     public class Select : Query
     {
         private string[] columns;
-        private MyPair<string, string>? orderByColumn;
+        private MyPair<string, string>[]? orderByColumns;
         private string? expr;
         private string[]? exprColNames;
         private bool hasWhere;
@@ -41,7 +34,7 @@ namespace Database_Management_System.FileManagement.QueryOperations
                 hasOrderBy = true;
             }
             else
-                orderByColumn = null;
+                orderByColumns = null;
 
             int whereStart = StringFormatter.IndexOf(src, Queries.where);
             if (whereStart != -1)
@@ -60,11 +53,14 @@ namespace Database_Management_System.FileManagement.QueryOperations
             _tableName = StringFormatter.Substring(src, fromStart + Queries.from.Length + 1, whereStart - 2);
             if (hasOrderBy)
             {
-                var cols = StringFormatter.Substring(src, orderbyStart + Queries.orderby.Length);
-                var splitted = StringFormatter.Split(cols);
-                if (splitted.Length == 1)
-                    orderByColumn = new MyPair<string, string>(splitted[0], Queries.ASC);
-                orderByColumn = new MyPair<string, string>(splitted[0], splitted[1]);
+                var cols = StringFormatter.Substring(src, orderbyStart + Queries.orderby.Length, ',');
+                for (int i = 0; i < cols.Length; ++i)
+                {
+                    var splitted = StringFormatter.Split(cols);
+                    if (splitted.Length == 1)
+                        orderByColumns![i] = new MyPair<string, string>(splitted[0], Queries.ASC);
+                    orderByColumns![i] = new MyPair<string, string>(splitted[0], splitted[1]);
+                }
             }
         }
 
@@ -85,46 +81,32 @@ namespace Database_Management_System.FileManagement.QueryOperations
             return rows;
         }
 
-        private void OrderBy()
+        private MyList<int> OrderBy(DataArray data, MyList<int> rows)
         {
-
+            //Sort by first and keep ranges to sort by second, third, etc.
+            return rows;
         }
 
         private MyList<int> Distinct(DataArray data, MyList<int> rows)
         {
             int[] colIndexes = data.GetColumnIndexes(columns);
-            for (int i = 0; i < colIndexes.Length; ++i)
+            MyDictionary<string, int> counter = new MyDictionary<string, int>();
+            for (int i = 0; i < rows.Length; ++i)
             {
-                MyDictionary<string, MyPair<MyList<int>, int>> counter = new MyDictionary<string, MyPair<MyList<int>, int>>();
-                for (int j = 0; j < rows.Length; ++j)
-                {
-                    var key = data[rows[j]][colIndexes[i]];
-                    if (!counter.HasKey(key))
-                    {
-                        var rowIndexes = new MyList<int>();
-                        rowIndexes.Add(rows[j]);
-                        counter.Add(key, MyPair<MyList<int>, int>.MakePair(rowIndexes, 1));
-                    }
-                    else
-                    {
-                        counter[key].First!.Add(rows[j]);
-                        ++counter[key].Second;
-                    }
-                }
+                StringBuilder sb = new StringBuilder();
+                for (int j = 0; j < colIndexes.Length; ++j)
+                    sb.ConCat(data[rows[i]][j]);
 
-                foreach (var item in counter)
-                {
-                    var count = item.Value;
-                    while (count.Second > 1)
-                    {
-                        rows.Remove(count.First![count.First.Length - 1]);
-                        count.First.PopBack();
-                        --count.Second;
-                    }
-                }
+                string key = sb.C_str;
+                if (!counter.HasKey(key))
+                    counter.Add(key, rows[i]);
             }
 
-            return rows;
+            MyList<int> distinctRows = new MyList<int>();
+            foreach (var item in counter)
+                distinctRows.Add(item.Value);
+
+            return distinctRows;
         }
 
         public override void Execute()
@@ -132,12 +114,13 @@ namespace Database_Management_System.FileManagement.QueryOperations
             DataArray data = new DataArray(_tableName);
             MyList<int> rows = new MyList<int>();
             if (hasWhere)
-                Where(data, rows);
+                rows = Where(data, rows);
 
             if (hasDistinct)
-                Distinct(data, rows);
+                rows = Distinct(data, rows);
 
-            //if (hasOrderBy)
+            if (hasOrderBy)
+                rows = OrderBy(data, rows);
 
             data.Print(rows.ToArray());
         }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Database_Management_System.Algorythms
+namespace Database_Management_System.Algorithms
 {
     public static class QuickSort
     {
