@@ -134,6 +134,8 @@ namespace Database_Management_System.DataStructures
             return types.ToArray();
         }
 
+        public int GetColumnsCount() => Columns.Length;
+
         public void PrintAllRecords()
         {
             int padding = CalculatePadding();

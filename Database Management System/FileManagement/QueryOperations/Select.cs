@@ -221,7 +221,7 @@ namespace Database_Management_System.FileManagement.QueryOperations
             {
                 StringBuilder sb = new StringBuilder();
                 for (int j = 0; j < colIndexes.Length; ++j)
-                    sb.ConCat(data[rows[i]][j]);
+                    sb.ConCat(data[rows[i]][colIndexes[j]]);
 
                 string key = sb.C_str;
                 if (!counter.HasKey(key))
@@ -240,7 +240,15 @@ namespace Database_Management_System.FileManagement.QueryOperations
             DataArray data = new DataArray(_tableName);
             MyList<int> rows = new MyList<int>();
 
-            int[] colIndexes = data.GetColumnIndexes(columns);
+            int[] colIndexes;
+            if (columns[0] == "*")
+            {
+                colIndexes = new int[data.GetColumnsCount()];
+                for (int i = 0; i < colIndexes.Length; ++i)
+                    colIndexes[i] = i;
+            }
+            else
+                colIndexes = data.GetColumnIndexes(columns);
 
             if (hasWhere)
                 rows = Where(data, rows);
