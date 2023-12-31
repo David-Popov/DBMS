@@ -30,8 +30,10 @@ namespace Database_Management_System.LogicExpressionCalculator.Expressions
             int result;
             if (DateTime.TryParseExact(left, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var leftDate) && DateTime.TryParseExact(right, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var rightDate))
                 result = Comparer<DateTime>.Default.Compare(leftDate, rightDate);
+            else if (int.TryParse(left, out int leftInt) && int.TryParse(right, out int rightInt))
+                result = Comparer<int>.Default.Compare(leftInt, rightInt);
             else
-                result = StringFormatter.Compare(left, right);
+                result = Comparer<string>.Default.Compare(left, right);
 
             switch (op)
             {

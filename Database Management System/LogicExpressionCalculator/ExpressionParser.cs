@@ -8,8 +8,10 @@ namespace Database_Management_System.LogicExpressionCalculator
 {
     public static class ExpressionParser
     {
+        //Idea
         private static class Formatter
         {
+            //remove every space from the source string
             private static string SpaceRemover(string src)
             {
                 if (StringFormatter.IsNullOrEmpty(src))
@@ -27,6 +29,7 @@ namespace Database_Management_System.LogicExpressionCalculator
                 return sb.C_str;
             }
 
+            //Create a string from a reverse polish notation to regular expression with brackets - '(' ')' according to the given operations priority
             private static string bracketFormatter(string src)
             {
                 if (StringFormatter.IsNullOrEmpty(src))
@@ -65,6 +68,7 @@ namespace Database_Management_System.LogicExpressionCalculator
                 return vars.Pop();
             }
 
+            //create reverse polish notation from source string expression where | is separator between operators and operands
             private static void RPN(string src, StringBuilder res, MyStack<char> operations, ref int i, ref bool firstAppend)
             {
                 if (StringFormatter.IsNullOrEmpty(src))
@@ -105,6 +109,7 @@ namespace Database_Management_System.LogicExpressionCalculator
                 }
             }
 
+            //if there is not brackets makes reverse polish notation else just concatinates the string
             public static string Format(string src)
             {
                 if (StringFormatter.IsNullOrEmpty(src))
@@ -147,6 +152,7 @@ namespace Database_Management_System.LogicExpressionCalculator
             }
         }
 
+        //Gets expressions after where and process them so can create parsable expression for validation later
         public static string GetParsableExpression(string src)
         {
             if (StringFormatter.IsNullOrEmpty(src))
@@ -178,6 +184,7 @@ namespace Database_Management_System.LogicExpressionCalculator
             return Formatter.Format(sb.C_str);
         }
 
+        //Gets expressions and extracts every column name from it
         public static string[] ExtractColumnNames(string src)
         {
             if (StringFormatter.IsNullOrEmpty(src))
@@ -219,6 +226,7 @@ namespace Database_Management_System.LogicExpressionCalculator
             return res.ToArray();
         }
 
+        //Creates evaluatable expression from source string
         public static Expression? ParseExpression(string src)
         {
             if (src.Length == 0)
@@ -244,5 +252,11 @@ namespace Database_Management_System.LogicExpressionCalculator
 
             return null;
         }
+
+        //WHERE Name < David AND Id > 5
+        //((Name<David)&(Id>5))
+        //(Name<David)&(Id>5)
+        //(Name<David)&(Id>5)
+        //Name<David
     }
 }

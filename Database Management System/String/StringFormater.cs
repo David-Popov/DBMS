@@ -281,31 +281,6 @@ namespace Database_Management_System.String
             return Substring(src, beg, end);
         }
 
-        public static int Compare(string left, string right)
-        {
-            if (IsNullOrEmpty(left) || IsNullOrEmpty(right))
-            {
-                throw new ArgumentNullException(MessageLogger.NullOrEmptyString());
-            }
-
-            if (left.Length > right.Length)
-                return 1;
-            else if (left.Length < right.Length)
-                return -1;
-            else
-            {
-                for(int i = 0; i < left.Length; ++i)
-                {
-                    if (left[i] > right[i])
-                        return 1;
-                    if (left[i] < right[i])
-                        return -1;
-                }
-            }
-
-            return 0;
-        }
-
         public static string PadLeft(string src, int padding, char symbol = ' ')
         {
             if (IsNullOrEmpty(src))
