@@ -4,6 +4,7 @@ using Database_Management_System.String;
 using Database_Management_System.Validators.Constants;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
@@ -27,12 +28,14 @@ namespace Database_Management_System.LogicExpressionCalculator.Expressions
         public override bool Evaluate()
         {
             int result;
-            if (DateTime.TryParse(left, out var leftDate) && DateTime.TryParse(right, out var rightDate))
+            if (DateTime.TryParseExact(left, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var leftDate) && DateTime.TryParseExact(right, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var rightDate))
                 result = Comparer<DateTime>.Default.Compare(leftDate, rightDate);
+            else if (int.TryParse(left, out int leftInt) && int.TryParse(right, out int rightInt))
+                result = Comparer<int>.Default.Compare(leftInt, rightInt);
             else
-                result = StringFormatter.Compare(left, right);
+                result = Comparer<string>.Default.Compare(left, right);
 
-            switch (op) 
+            switch (op)
             {
                 case LogicOperators.lt: return result == -1;
                 case LogicOperators.cLtoEq: return result == 0 || result == -1;

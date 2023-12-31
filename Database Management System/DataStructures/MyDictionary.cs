@@ -121,6 +121,18 @@ namespace Database_Management_System.DataStructures
             return false;
         }
 
+        public TValue this[TKey key]
+        {
+            get
+            {
+                return buckets[GetBucketIndex(key)].Value;
+            }
+            set
+            {
+                buckets[GetBucketIndex(key)].Value = value;
+            }
+        }
+
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
             foreach (var pair in buckets)

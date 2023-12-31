@@ -102,6 +102,11 @@ namespace Database_Management_System.DataStructures
             _length = 0;
         }
 
+        public void PopBack()
+        {
+            --_length;
+        }
+
         public T this[int index]
         { get { return _data[index]; } set { _data[index] = value; } }
 

@@ -10,7 +10,7 @@ using System.Xml.Linq;
 
 namespace Database_Management_System.DataStructures
 {
-    public class DataArray
+    public class DataArray : IDisposable
     {
         private readonly BinaryReader _br;
         private readonly BinaryWriter _bw;
@@ -71,94 +71,12 @@ namespace Database_Management_System.DataStructures
             return result;
         }
 
-        private void PrintColumns(ref int padding)
-        {
-            for (int i = 0; i < Columns.Length; i++)
-            {
-                double namePadding = Math.Ceiling(((double)(padding - Columns[i].name.Length)) / 2 + 1);
-                if (i == 0)
-                    Console.Write($"|{StringFormatter.FixedPrint(Columns[i].name, (int)namePadding)}|");
-                else
-                    Console.Write($"{StringFormatter.FixedPrint(Columns[i].name, (int)namePadding)}|");
-            }
-
-            Console.WriteLine();
-            Console.WriteLine(new string('-', (padding + 4) * Columns.Length + 1));
-        }
-
-        private int CalculatePadding()
-        {
-            int padding = 0;
-
-            foreach (var col in Columns)
-            {
-                int len = col.GetMaxPrintLen();
-                padding = padding < len ? len : padding;
-            }
-
-            for (int i = 0; i < this.Length; i++)
-            {
-                var data = this[i].Data;
-
-                for (int j = 0; j < data.Length; j++)
-                {
-                    padding = padding < data[j].Length ? data[j].Length : padding;
-                }
-            }
-
-            return padding;
-        }
-
         public RowValues this[int index]
         {
             get
             {
                 _stream.Seek(Offset + index * RowSize, SeekOrigin.Begin);
                 return BytesToString(Columns);
-            }
-        }
-
-        public void Print()
-        {
-            int padding = CalculatePadding();
-
-            Refresh();
-
-            PrintColumns(ref padding);
-
-            for (int i = 0; i < this.Length; i++)
-            {
-                var data = this[i].Data;
-                for (int j = 0; j < data.Length; j++)
-                {
-                    double namePadding = Math.Ceiling(((double)(padding - data[j].Length)) / 2 + 1);
-                    if (j == 0)
-                        Console.Write($"|{StringFormatter.FixedPrint(data[j], (int)namePadding)}|");
-                    else
-                        Console.Write($"{StringFormatter.FixedPrint(data[j], (int)namePadding)}|");
-                }
-                Console.WriteLine();
-            }
-        }
-
-        public void Print(int[] rowIndexes)
-        {
-            int padding = CalculatePadding();
-
-            PrintColumns(ref padding);
-
-            foreach (var i in rowIndexes)
-            {
-                var data = this[i].Data;
-                for (int j = 0; j < data.Length; j++)
-                {
-                    double namePadding = Math.Ceiling(((double)(padding - data[j].Length)) / 2 + 1);
-                    if (j == 0)
-                        Console.Write($"|{StringFormatter.FixedPrint(data[j], (int)namePadding)}|");
-                    else
-                        Console.Write($"{StringFormatter.FixedPrint(data[j], (int)namePadding)}|");
-                }
-                Console.WriteLine();
             }
         }
 
@@ -204,6 +122,182 @@ namespace Database_Management_System.DataStructures
             }
 
             return indexes.ToArray();
+        }
+
+        public string[] GetColumnTypes(int[] columnIndexes)
+        {
+            MyList<string> types = new MyList<string>(columnIndexes.Length);
+
+            for (int i = 0; i < columnIndexes.Length; ++i)
+                types.Add(Columns[columnIndexes[i]].type);
+
+            return types.ToArray();
+        }
+
+        public int GetColumnsCount() => Columns.Length;
+
+        public void PrintAllRecords()
+        {
+            int padding = CalculatePadding();
+
+            Refresh();
+
+            PrintColumnsWithHeader(ref padding);
+
+            for (int i = 0; i < this.Length; i++)
+            {
+                var data = this[i].Data;
+                PrintRecord(data, padding);
+            }
+        }
+
+        public void PrintSelectedRecords(int[] rowIndexes)
+        {
+            int padding = CalculatePadding();
+
+            PrintColumnsWithHeader(ref padding);
+
+            foreach (var i in rowIndexes)
+            {
+                var data = this[i].Data;
+                PrintRecord(data, padding);
+            }
+        }
+
+        public void PrintSelectedColumns(int[] colIndexes)
+        {
+            int padding = CalculatePadding();
+
+            PrintColumnsWithHeader(ref padding, colIndexes);
+
+            for (int i = 0; i < Length; i++)
+            {
+                var data = this[i].Data;
+                PrintRecordForColumns(data, padding, colIndexes);
+            }
+        }
+
+        private void PrintColumnsWithHeader(ref int padding)
+        {
+            for (int i = 0; i < Columns.Length; i++)
+            {
+                if (i == 0)
+                {
+                    double namePadding = Math.Ceiling(((double)(padding - Columns[i].name.Length)) / 2 + 1);
+                    Console.Write($"|{StringFormatter.FixedPrint(Columns[i].name, (int)namePadding)}|");
+                }
+                else
+                {
+                    double namePadding = Math.Ceiling(((double)(padding - Columns[i].name.Length)) / 2 + 1);
+                    Console.Write($"{StringFormatter.FixedPrint(Columns[i].name, (int)namePadding)}|");
+                }
+            }
+
+            Console.WriteLine();
+            Console.WriteLine(new string('-', (padding + 4) * Columns.Length + 1));
+        }
+
+        private void PrintColumnsWithHeader(ref int padding, int[] colIndexes)
+        {
+            for (int i = 0; i < Columns.Length; i++)
+            {
+                double namePadding = Math.Ceiling(((double)(padding - Columns[i].name.Length)) / 2 + 1);
+
+                if (colIndexes.Contains(i) && i == 0)
+                {
+                    Console.Write($"|{StringFormatter.FixedPrint(Columns[i].name, (int)namePadding)}|");
+                }
+                else if (colIndexes.Contains(i) && i > 0)
+                {
+                    Console.Write($"{StringFormatter.FixedPrint(Columns[i].name, (int)namePadding)}|");
+                }
+            }
+
+            Console.WriteLine();
+            Console.WriteLine(new string('-', (padding + 4) * colIndexes.Length + 1));
+        }
+
+        private void PrintRecord(string[] data, int padding)
+        {
+            for (int j = 0; j < data.Length; j++)
+            {
+                double namePadding = Math.Ceiling(((double)(padding - data[j].Length)) / 2 + 1);
+                if (j == 0)
+                    Console.Write($"|{StringFormatter.FixedPrint(data[j], (int)namePadding)}|");
+                else
+                    Console.Write($"{StringFormatter.FixedPrint(data[j], (int)namePadding)}|");
+            }
+            Console.WriteLine();
+        }
+
+        private void PrintRecordForColumns(string[] data, int padding, int[] colIndexes)
+        {
+            for (int j = 0; j < data.Length; j++)
+            {
+                if (!colIndexes.Contains(j))
+                {
+                    continue;
+                }
+
+                double namePadding = Math.Ceiling(((double)(padding - data[j].Length)) / 2 + 1);
+                if (j == 0)
+                    Console.Write($"|{StringFormatter.FixedPrint(data[j], (int)namePadding)}|");
+                else
+                    Console.Write($"{StringFormatter.FixedPrint(data[j], (int)namePadding)}|");
+            }
+            Console.WriteLine();
+        }
+
+        public void PrintSelectedRecordsAndColumns(int[] rowIndexes, int[] colIndexes)
+        {
+            int padding = CalculatePadding();
+
+            PrintColumnsWithHeader(ref padding, colIndexes);
+
+            foreach (var i in rowIndexes)
+            {
+                var data = this[i].Data;
+                PrintRecordForColumns(data, padding, colIndexes);
+            }
+        }
+
+        private int CalculatePadding()
+        {
+            int padding = 0;
+
+            foreach (var col in Columns)
+            {
+                int len = col.GetMaxPrintLen();
+                padding = padding < len ? len : padding;
+            }
+
+            for (int i = 0; i < this.Length; i++)
+            {
+                var data = this[i].Data;
+
+                for (int j = 0; j < data.Length; j++)
+                {
+                    padding = padding < data[j].Length ? data[j].Length : padding;
+                }
+            }
+
+            return padding;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _br?.Dispose();
+                _bw?.Dispose();
+                _stream?.Dispose();
+            }
         }
 
         public void Refresh()

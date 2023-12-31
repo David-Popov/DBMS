@@ -3,27 +3,24 @@ using Database_Management_System.LogicExpressionCalculator;
 using Database_Management_System.String;
 using Database_Management_System.Validators.Constants;
 using Database_Management_System.LogicExpressionCalculator.Expressions;
+using Database_Management_System.Algorithms;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Globalization;
 
 namespace Database_Management_System.FileManagement.QueryOperations
 {
     public class Select : Query
     {
         private string[] columns;
-        private MyPair<string, string>? orderByColumn;
+        private string[]? orderByColumns;
+        private bool[]? orderStyle;
         private string? expr;
         private string[]? exprColNames;
         private bool hasWhere;
         private bool hasDistinct;
         private bool hasOrderBy;
- 
-        public Select(string src) 
+
+        public Select(string src)
         {
             int fromStart = StringFormatter.IndexOf(src, Queries.from);
             int start = 0;
@@ -41,7 +38,10 @@ namespace Database_Management_System.FileManagement.QueryOperations
                 hasOrderBy = true;
             }
             else
-                orderByColumn = null;
+            {
+                orderByColumns = null;
+                orderStyle = null;
+            }
 
             int whereStart = StringFormatter.IndexOf(src, Queries.where);
             if (whereStart != -1)
@@ -57,14 +57,26 @@ namespace Database_Management_System.FileManagement.QueryOperations
             }
 
             columns = StringFormatter.Split(StringFormatter.Substring(src, start, fromStart - 2), ',');
-            _tableName = StringFormatter.Substring(src, fromStart + Queries.from.Length + 1, whereStart - 2);
+            _tableName = StringFormatter.Substring(src, fromStart + Queries.from.Length + 1, ' ');
             if (hasOrderBy)
             {
-                var cols = StringFormatter.Substring(src, orderbyStart + Queries.orderby.Length);
-                var splitted = StringFormatter.Split(cols);
-                if (splitted.Length == 1)
-                    orderByColumn = new MyPair<string, string>(splitted[0], Queries.ASC);
-                orderByColumn = new MyPair<string, string>(splitted[0], splitted[1]);
+                var cols = StringFormatter.Split(StringFormatter.Substring(src, orderbyStart + Queries.orderby.Length + 1), ',');
+                orderByColumns = new string[cols.Length];
+                orderStyle = new bool[cols.Length];
+                for (int i = 0; i < cols.Length; ++i)
+                {
+                    var splitted = StringFormatter.Split(cols[i]);
+                    if (splitted.Length == 1)
+                    {
+                        orderByColumns![i] = splitted[0];
+                        orderStyle![i] = false;
+                    }
+                    else
+                    {
+                        orderByColumns![i] = splitted[0];
+                        orderStyle![i] = splitted[1] != Queries.ASC;
+                    }
+                }
             }
         }
 
@@ -85,53 +97,179 @@ namespace Database_Management_System.FileManagement.QueryOperations
             return rows;
         }
 
-        private void OrderBy()
+        private MyList<int> OrderByDate(DataArray data, MyList<int> rows, int[] colIndexes,
+                                        MyList<MyPair<int, int>> ranges, int columnIndex)
         {
+            var pairs = new MyPair<DateTime, int>[rows.Length];
+            for (int j = 0; j < rows.Length; ++j)
+                pairs[j] = MyPair<DateTime, int>.MakePair(DateTime.ParseExact(data[rows[j]][colIndexes[columnIndex]], "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None), rows[j]);
 
-        }
+            for (int j = 0; j < ranges.Length; ++j)
+                QuickSort.Sort<MyPair<DateTime, int>>(pairs, ranges[j].First, ranges[j].Second, orderStyle![columnIndex]);
 
-        private MyList<int> Distinct(DataArray data, MyList<int> rows)
-        {
-            int[] colIndexes = data.GetColumnIndexes(columns);
-            for (int i = 0; i < colIndexes.Length; ++i)
+            ranges.Clear();
+            for (int j = 0; j < rows.Length - 1; ++j)
             {
-                Dictionary<string, MyPair<int, int>> counter = new Dictionary<string, MyPair<int, int>>();
-                for (int j = 0; j < rows.Length; ++j)
+                int start = j;
+                while (pairs[j].First == pairs[j + 1].First)
                 {
-                    var key = data[rows[j]][colIndexes[i]];
-                    if (!counter.ContainsKey(key))
-                        counter.Add(key, MyPair<int, int>.MakePair(rows[j], 1));
-                    else
-                        ++counter[key].Second;
+                    ++j;
+
+                    if (j >= rows.Length - 1)
+                        break;
                 }
 
-                foreach (var item in counter)
+                ranges.Add(MyPair<int, int>.MakePair(start, j));
+            }
+
+            for (int j = 0; j < rows.Length; ++j)
+                rows[j] = pairs[j].Second;
+
+            return rows;
+        }
+
+        private MyList<int> OrderByInt(DataArray data, MyList<int> rows, int[] colIndexes,
+                                       MyList<MyPair<int, int>> ranges, int columnIndex)
+        {
+            var pairs = new MyPair<int, int>[rows.Length];
+            for (int j = 0; j < rows.Length; ++j)
+                pairs[j] = MyPair<int, int>.MakePair(int.Parse(data[rows[j]][colIndexes[columnIndex]]), rows[j]);
+
+            for (int j = 0; j < ranges.Length; ++j)
+                QuickSort.Sort<MyPair<int, int>>(pairs, ranges[j].First, ranges[j].Second, orderStyle![columnIndex]);
+
+            ranges.Clear();
+            for (int j = 0; j < rows.Length - 1; ++j)
+            {
+                int start = j;
+                while (pairs[j].First == pairs[j + 1].First)
                 {
-                    var count = item.Value;
-                    while (count.Second > 1)
-                    {
-                        rows.Remove(count.First);
-                        --count.Second;
-                    }
+                    ++j;
+
+                    if (j >= rows.Length - 1)
+                        break;
+                }
+
+                ranges.Add(MyPair<int, int>.MakePair(start, j));
+            }
+
+            for (int j = 0; j < rows.Length; ++j)
+                rows[j] = pairs[j].Second;
+
+            return rows;
+        }
+
+        private MyList<int> OrderByString(DataArray data, MyList<int> rows, int[] colIndexes,
+                                          MyList<MyPair<int, int>> ranges, int columnIndex)
+        {
+            var pairs = new MyPair<string, int>[rows.Length];
+            for (int j = 0; j < rows.Length; ++j)
+                pairs[j] = MyPair<string, int>.MakePair(data[rows[j]][colIndexes[columnIndex]], rows[j]);
+
+            for (int j = 0; j < ranges.Length; ++j)
+                QuickSort.Sort<MyPair<string, int>>(pairs, ranges[j].First, ranges[j].Second, orderStyle![columnIndex]);
+
+            ranges.Clear();
+            for (int j = 0; j < rows.Length - 1; ++j)
+            {
+                int start = j;
+                while (pairs[j].First == pairs[j + 1].First)
+                {
+                    ++j;
+
+                    if (j >= rows.Length - 1)
+                        break;
+                }
+
+                ranges.Add(MyPair<int, int>.MakePair(start, j));
+            }
+
+            for (int j = 0; j < rows.Length; ++j)
+                rows[j] = pairs[j].Second;
+
+            return rows;
+        }
+
+        private MyList<int> OrderBy(DataArray data, MyList<int> rows)
+        {
+            if (rows.Length == 0)
+                return rows;
+
+            int[] colIndexes = data.GetColumnIndexes(orderByColumns!);
+            string[] colTypes = data.GetColumnTypes(colIndexes);
+            MyList<MyPair<int, int>> ranges = new MyList<MyPair<int, int>>();
+            ranges.Add(MyPair<int, int>.MakePair(0, rows.Length - 1));
+            for (int i = 0; i < colIndexes!.Length; ++i)
+            {
+                switch (colTypes[i])
+                {
+                    case Utility.typeInt: rows = OrderByInt(data, rows, colIndexes, ranges, i); break;
+                    case Utility.typeString: rows = OrderByString(data, rows, colIndexes, ranges, i); break;
+                    case Utility.typeDateTime: rows = OrderByDate(data, rows, colIndexes, ranges, i); break;
                 }
             }
 
             return rows;
         }
 
+        private MyList<int> Distinct(DataArray data, MyList<int> rows, int[] colIndexes)
+        {
+            if (rows.Length == 0)
+                return rows;
+
+            MyDictionary<string, int> counter = new MyDictionary<string, int>();
+            for (int i = 0; i < rows.Length; ++i)
+            {
+                StringBuilder sb = new StringBuilder();
+                for (int j = 0; j < colIndexes.Length; ++j)
+                    sb.ConCat(data[rows[i]][colIndexes[j]]);
+
+                string key = sb.C_str;
+                if (!counter.HasKey(key))
+                    counter.Add(key, rows[i]);
+            }
+
+            MyList<int> distinctRows = new MyList<int>();
+            foreach (var item in counter)
+                distinctRows.Add(item.Value);
+
+            return distinctRows;
+        }
+
         public override void Execute()
         {
-            DataArray data = new DataArray(_tableName);
-            MyList<int> rows = new MyList<int>();
-            if (hasWhere)
-                Where(data, rows);
+            using (DataArray data = new DataArray(_tableName))
+            {
+                MyList<int> rows = new MyList<int>();
 
-            if (hasDistinct)
-                Distinct(data, rows);
+                int[] colIndexes;
+                if (columns[0] == "*")
+                {
+                    colIndexes = new int[data.GetColumnsCount()];
+                    for (int i = 0; i < colIndexes.Length; ++i)
+                        colIndexes[i] = i;
+                }
+                else
+                    colIndexes = data.GetColumnIndexes(columns);
 
-            //if (hasOrderBy)
+                if (hasWhere)
+                    rows = Where(data, rows);
+                else
+                {
+                    for (int i = 0; i < data.Length; ++i)
+                        rows.Add(i);
+                }
 
-            data.Print(rows.ToArray());
+                if (hasDistinct)
+                    rows = Distinct(data, rows, colIndexes);
+
+                if (hasOrderBy)
+                    rows = OrderBy(data, rows);
+
+                data.PrintSelectedRecordsAndColumns(rows.ToArray(), colIndexes);
+
+                Console.WriteLine($"Returned {rows.Length} records.");
+            }
         }
     }
 }
