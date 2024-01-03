@@ -8,7 +8,7 @@ namespace Database_Management_System.Validators.Constants
 {
     public static class LogicOperators
     {
-        public const string eq = "<>";
+        public const string nEq = "<>";
         public const string mtoEq = ">=";
         public const string ltoEq = "<=";
         public const string and = "AND";
@@ -20,17 +20,18 @@ namespace Database_Management_System.Validators.Constants
         public const char cMtoEq = '}';
         public const char cLtoEq = '{';
         public const char cEq = '=';
-        public const char cAnd = '^';
-        public const char cOr = '&';
-        public const char cNEq = '!';
+        public const char cAnd = '&';
+        public const char cOr = '^';
+        public const char cNot = '!';
+        public const char cNEq = '%';
 
         public static char GetReplacement(string op)
         {
             switch (op)
             {
-                case LogicOperators.eq: return cEq;
+                case LogicOperators.nEq: return cNEq;
                 case LogicOperators.and: return cAnd;
-                case LogicOperators.not: return cNEq;
+                case LogicOperators.not: return cNot;
                 case LogicOperators.or: return cOr;
                 case LogicOperators.ltoEq: return cLtoEq;
                 case LogicOperators.mtoEq: return cMtoEq;

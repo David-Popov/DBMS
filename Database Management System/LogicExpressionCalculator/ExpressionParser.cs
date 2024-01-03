@@ -160,7 +160,7 @@ namespace Database_Management_System.LogicExpressionCalculator
                 throw new ArgumentNullException(MessageLogger.NullOrEmptyString());
             }
 
-            string[] operators = { LogicOperators.eq, LogicOperators.or, LogicOperators.not,
+            string[] operators = { LogicOperators.nEq, LogicOperators.or, LogicOperators.not,
                                    LogicOperators.and, LogicOperators.ltoEq, LogicOperators.mtoEq };
             foreach (var op in operators)
                 src = StringFormatter.ReplaceAll(src, op, LogicOperators.GetReplacement(op));
@@ -168,7 +168,7 @@ namespace Database_Management_System.LogicExpressionCalculator
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < src.Length; ++i)
             {
-                if (src[i] == LogicOperators.cNEq)
+                if (src[i] == LogicOperators.cNot)
                 {
                     ++i;
                     while (!LogicOperators.isLogicExpressionOperator(src[i]))
